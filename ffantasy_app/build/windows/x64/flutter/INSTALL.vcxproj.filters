@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\moham\Desktop\dev\Flutter\Fantasy_Fiesta\ffantasy_app\build\windows\x64\CMakeFiles\78fa501380efe66f53380e0af60986e7\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1D1045AA-21C6-3E28-87FD-B0FCC68F8F11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

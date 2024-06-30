@@ -1,0 +1,17 @@
+const Map<String, String> countryCode = {
+  'BEL': 'BE',
+  'NED': 'NL',
+  'SWE': 'SE',
+  'FRA': 'FR',
+  'ARG': 'AR',
+  'ENG': 'GB',
+  'GER': 'DE',
+  'ESP': 'ES',
+  'ITA': 'IT',
+  'AUT': 'AU',
+  'POR': 'PT',
+  'CZE': 'CZ',
+  'UKR': 'UA',
+  'SUI': 'IE',
+  'CHI': 'HR',
+};
