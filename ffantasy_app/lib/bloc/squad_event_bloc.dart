@@ -6,34 +6,24 @@ import 'package:meta/meta.dart';
 part 'squad_event_event.dart';
 part 'squad_event_state.dart';
 
+int cost = 0;
+
 class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
   SquadEventBloc() : super(SquadInitialState()) {
-    int cost = 0;
-    int currentPlayerCost = 0;
     on<AddPlayerEvent>((event, emit) {
       if (state is SquadAddedState) {
         final List<int> updatedSquad =
             List.from((state as SquadAddedState).squad);
-        for (int playerid in updatedSquad) {
-          players.forEach((element) {
-            if (element['id'] == (playerid).toString()) {
-              cost += int.parse((element['price']).toString());
-              if (element['id'] == event.playerid) {
-                currentPlayerCost = int.parse((element['price']).toString());
-              }
-            }
-          });
-        }
+
         if (updatedSquad.contains(event.playerid)) {
           updatedSquad.remove(event.playerid);
 
-          cost -= currentPlayerCost;
+          //cost -= playerPrice;
         } else {
           if (updatedSquad.length < 11) {
             updatedSquad.add(event.playerid);
-            cost += currentPlayerCost;
           } else {
-            ScaffoldMessenger.of(event.context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(event.context).showSnackBar(const SnackBar(
               content: Text('Maximum number of players 11 reached.'),
               duration: Duration(seconds: 2),
             ));
@@ -41,6 +31,20 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
           //cost += playerPrice;
         }
         cost = 0;
+
+        for (int playerid in updatedSquad) {
+          for (var element in players) {
+            if (int.parse(element['id']) == (playerid)) {
+              var currentplayerprice = element['price'];
+              if (currentplayerprice is int) {
+                cost += element['price'] as int;
+              }
+            }
+          }
+        }
+
+        print(cost);
+        print(updatedSquad);
         emit(SquadAddedState(updatedSquad, cost));
       }
     });

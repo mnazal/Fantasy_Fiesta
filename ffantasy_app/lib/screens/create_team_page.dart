@@ -81,6 +81,13 @@ class _CreateTeamState extends State<CreateTeam> {
             if (state is SquadAddedState) {
               creditsLeft = 100 - state.cost;
               playernumber = state.squad.length;
+              if (creditsLeft < 0) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content:
+                      Text('You have used more than your Available Credits'),
+                  duration: Duration(seconds: 2),
+                ));
+              }
             }
           },
           builder: (context, state) {
@@ -195,10 +202,12 @@ class _CreateTeamState extends State<CreateTeam> {
                                       ),
                                       Text(
                                         "$creditsLeft M",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: creditsLeft < 0
+                                              ? Colors.red
+                                              : Colors.white,
                                         ),
                                       ),
                                     ],
