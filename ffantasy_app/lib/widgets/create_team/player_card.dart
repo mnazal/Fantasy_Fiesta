@@ -1,4 +1,4 @@
-import 'package:ffantasy_app/bloc/change_color/change_color_bloc.dart';
+import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +9,7 @@ class PlayerCard extends StatelessWidget {
   final String playerImage;
   final String playerName;
   final int playerid;
+  final bool color;
 
   const PlayerCard({
     super.key,
@@ -18,27 +19,36 @@ class PlayerCard extends StatelessWidget {
     required this.credits,
     required this.teamName,
     required this.playerid,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color containerColor = Colors.white;
-    Color amber = Color.fromARGB(174, 255, 212, 147);
-    return BlocBuilder<ChangeColorBloc, ChangeColorState>(
+    bool isSelected = false;
+    Color white = Colors.white;
+    Color amber = Color.fromARGB(120, 237, 188, 114);
+    Color containerColor = white;
+    return BlocBuilder<SquadEventBloc, SquadEventState>(
       builder: (context, state) {
-        bool isSelected = false;
-        if (state is ChangeColorState) {
-          isSelected = true;
+        if (state is SquadAddedState) {
+          if (state.squad.contains(playerid)) {
+            containerColor = Colors.amber;
+            isSelected = true;
+          } else {
+            containerColor = Colors.white;
+            isSelected = false;
+          }
         }
         return GestureDetector(
           onTap: () {
-            context.read<ChangeColorBloc>().add(SelectedPlayerEvent(
-                index: 1, cost: credits, playerId: playerid));
+            context
+                .read<SquadEventBloc>()
+                .add(AddPlayerEvent(playerid, context));
           },
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(width: 0.1),
-              color: isSelected ? amber : containerColor,
+              color: containerColor,
             ),
             height: 62,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
@@ -118,11 +128,7 @@ class PlayerCard extends StatelessWidget {
                         icon: isSelected
                             ? Icon(Icons.remove_circle)
                             : Icon(Icons.add_circle),
-                        onPressed: () {
-                          context.read<ChangeColorBloc>().add(
-                              SelectedPlayerEvent(
-                                  index: 1, cost: credits, playerId: playerid));
-                        },
+                        onPressed: () {},
                         iconSize: 20,
                       ),
                     ],

@@ -243,3 +243,12 @@ List<Map<String, dynamic>> players = [
     'image': 'assets/player/messi.jpeg'
   }
 ];
+
+List<String> positions = ['GK', 'DEF', 'MID', 'FWD'];
+
+List<String> numberConstraints = [
+  'Select 1 Goalkeeper',
+  'Select 3-5 Defenders',
+  'Select 3-5 Midfielders',
+  'Select 1-3 Forwards',
+];
