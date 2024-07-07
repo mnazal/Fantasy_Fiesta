@@ -9,7 +9,7 @@ class PlayerCard extends StatelessWidget {
   final String playerImage;
   final String playerName;
   final int playerid;
-  final bool color;
+  final bool home;
 
   const PlayerCard({
     super.key,
@@ -19,7 +19,7 @@ class PlayerCard extends StatelessWidget {
     required this.credits,
     required this.teamName,
     required this.playerid,
-    required this.color,
+    required this.home,
   });
 
   @override
@@ -43,14 +43,14 @@ class PlayerCard extends StatelessWidget {
           onTap: () {
             context
                 .read<SquadEventBloc>()
-                .add(AddPlayerEvent(playerid, context));
+                .add(AddPlayerEvent(playerid, context, home));
           },
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(width: 0.1),
               color: containerColor,
             ),
-            height: 62,
+            height: 75,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -70,7 +70,11 @@ class PlayerCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               playerName,
                               style: TextStyle(

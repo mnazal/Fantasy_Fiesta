@@ -1,12 +1,13 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ffantasy_app/data/players.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'squad_event_event.dart';
 part 'squad_event_state.dart';
 
 int cost = 0;
+int homePlayers = 0;
+int awayPlayers = 0;
 
 class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
   SquadEventBloc() : super(SquadInitialState()) {
@@ -17,11 +18,21 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
 
         if (updatedSquad.contains(event.playerid)) {
           updatedSquad.remove(event.playerid);
+          if (event.ishome) {
+            homePlayers--;
+          } else {
+            awayPlayers--;
+          }
 
           //cost -= playerPrice;
         } else {
           if (updatedSquad.length < 11) {
             updatedSquad.add(event.playerid);
+            if (event.ishome) {
+              homePlayers++;
+            } else {
+              awayPlayers++;
+            }
           } else {
             ScaffoldMessenger.of(event.context).showSnackBar(const SnackBar(
               content: Text('Maximum number of players 11 reached.'),
@@ -43,14 +54,12 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
           }
         }
 
-        print(cost);
-        print(updatedSquad);
-        emit(SquadAddedState(updatedSquad, cost));
+        emit(SquadAddedState(updatedSquad, cost, homePlayers, awayPlayers));
       }
     });
 
     // Initialize with an empty list
     // ignore: invalid_use_of_visible_for_testing_member
-    emit(SquadAddedState(const [], 0));
+    emit(SquadAddedState(const [], 0, 0, 0));
   }
 }

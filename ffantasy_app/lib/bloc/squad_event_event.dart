@@ -6,8 +6,9 @@ sealed class SquadEventEvent {}
 class AddPlayerEvent extends SquadEventEvent {
   final int playerid;
   final BuildContext context;
+  final bool ishome;
 
-  AddPlayerEvent(this.playerid, this.context);
+  AddPlayerEvent(this.playerid, this.context, this.ishome);
 }
 
 class RemovePlayerEvent extends SquadEventEvent {
