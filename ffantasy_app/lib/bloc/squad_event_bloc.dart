@@ -9,6 +9,7 @@ part 'squad_event_state.dart';
 class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
   SquadEventBloc() : super(SquadInitialState()) {
     int cost = 0;
+    int currentPlayerCost = 0;
     on<AddPlayerEvent>((event, emit) {
       if (state is SquadAddedState) {
         final List<int> updatedSquad =
@@ -17,23 +18,29 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
           players.forEach((element) {
             if (element['id'] == (playerid).toString()) {
               cost += int.parse((element['price']).toString());
+              if (element['id'] == event.playerid) {
+                currentPlayerCost = int.parse((element['price']).toString());
+              }
             }
           });
         }
         if (updatedSquad.contains(event.playerid)) {
           updatedSquad.remove(event.playerid);
 
-          //cost -= playerPrice;
+          cost -= currentPlayerCost;
         } else {
           if (updatedSquad.length < 11) {
             updatedSquad.add(event.playerid);
+            cost += currentPlayerCost;
+          } else {
+            ScaffoldMessenger.of(event.context).showSnackBar(SnackBar(
+              content: Text('Maximum number of players 11 reached.'),
+              duration: Duration(seconds: 2),
+            ));
           }
           //cost += playerPrice;
         }
         cost = 0;
-
-        print(cost);
-        print(updatedSquad);
         emit(SquadAddedState(updatedSquad, cost));
       }
     });
