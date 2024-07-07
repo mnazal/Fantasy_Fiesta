@@ -62,6 +62,7 @@ flutter:
   
   assets:
     - assets/avatars/cr.png
+    - assets/avatars/field.jpg
     - assets/avatars/ARG.jpg
     - assets/barcelona.png
     - assets/madrid.png

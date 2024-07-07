@@ -38,11 +38,10 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
     int playernumber = 0;
     int homeNumber = 0;
     int awayNumber = 0;
-    int positioned = 0;
-    int gk = 0;
-    int df = 0, mf = 0, fw = 0;
-
-    bool selected = false;
+    // ignore: unused_local_variable
+    int positioned = 0, gk = 0, df = 0, mf = 0, fw = 0;
+    bool isWeb = MediaQuery.of(context).size.width >= 1024 ? true : false;
+    ;
 
     final List<Map<String, dynamic>> teamPlayers = players.where((player) {
       return player['team'] == widget.homeTeamName ||
@@ -154,11 +153,12 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                 color: const Color.fromARGB(255, 34, 1, 90),
                                 height: 40,
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Flexible(
-                                      flex: 3,
+                                      flex: 6,
                                       fit: FlexFit.tight,
                                       child: Text(
                                         'Player',
@@ -227,6 +227,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                               widget.homeTeamName
                                           ? true
                                           : false,
+                                      position: i,
                                     );
                                   },
                                 ),
@@ -238,30 +239,31 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                   ),
                   Container(
                     height: 80,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                     decoration: BoxDecoration(
                         color: Color.fromARGB(155, 225, 225, 225)),
                     alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FractionallySizedBox(
+                          heightFactor: 0.85,
+                          child: ElevatedButton(
                             onPressed: () {
                               // Add your onPressed code here!
                             },
                             style: const ButtonStyle(
-                                padding: MaterialStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        vertical: 13, horizontal: 18)),
+                                // padding: MaterialStatePropertyAll(
+                                //     EdgeInsets.symmetric(
+                                //         vertical: 13, horizontal: 18)),
                                 backgroundColor: MaterialStatePropertyAll(
                                     Color.fromARGB(255, 255, 255, 255)),
                                 shape: MaterialStatePropertyAll(
                                     RoundedRectangleBorder(
                                         side: BorderSide(width: 0.1),
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(6)))),
+                                            Radius.circular(2)))),
                                 surfaceTintColor: MaterialStatePropertyAll(
                                     Colors.white)), // Deep blue color
 
@@ -273,10 +275,13 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          ElevatedButton(
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        FractionallySizedBox(
+                          heightFactor: 0.85,
+                          child: ElevatedButton(
                             onPressed: () {
                               // Add your onPressed code here!
                             },
@@ -287,7 +292,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                 shape: MaterialStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(6)))),
+                                            Radius.circular(2)))),
                                 backgroundColor: MaterialStatePropertyAll(
                                     Color.fromARGB(255, 34, 1, 90)),
                                 surfaceTintColor: MaterialStatePropertyAll(
@@ -312,8 +317,8 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   )
                 ],

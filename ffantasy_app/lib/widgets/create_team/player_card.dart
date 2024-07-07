@@ -10,6 +10,7 @@ class PlayerCard extends StatelessWidget {
   final String playerName;
   final int playerid;
   final bool home;
+  final int position;
 
   const PlayerCard({
     super.key,
@@ -20,13 +21,13 @@ class PlayerCard extends StatelessWidget {
     required this.teamName,
     required this.playerid,
     required this.home,
+    required this.position,
   });
 
   @override
   Widget build(BuildContext context) {
     bool isSelected = false;
     Color white = Colors.white;
-    Color amber = Color.fromARGB(120, 237, 188, 114);
     Color containerColor = white;
     return BlocBuilder<SquadEventBloc, SquadEventState>(
       builder: (context, state) {
@@ -43,7 +44,7 @@ class PlayerCard extends StatelessWidget {
           onTap: () {
             context
                 .read<SquadEventBloc>()
-                .add(AddPlayerEvent(playerid, context, home));
+                .add(AddPlayerEvent(playerid, context, home, position));
           },
           child: Container(
             decoration: BoxDecoration(
@@ -51,12 +52,18 @@ class PlayerCard extends StatelessWidget {
               color: containerColor,
             ),
             height: 75,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+            padding: EdgeInsets.only(left: 10, top: 3, bottom: 3, right: 19),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(Icons.help),
+                  onPressed: () {},
+                  iconSize: 20,
+                ),
                 Flexible(
-                  flex: 3,
+                  flex: 6,
                   fit: FlexFit.tight,
                   child: Row(
                     children: [
@@ -112,7 +119,7 @@ class PlayerCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 16,
+                  width: 20,
                 ),
                 Flexible(
                   flex: 1,
@@ -121,19 +128,12 @@ class PlayerCard extends StatelessWidget {
                     children: [
                       Text(
                         credits.toString(),
+                        textAlign: TextAlign.right,
                         style: TextStyle(
                           color: Color.fromARGB(255, 34, 1, 90),
                           fontWeight: FontWeight.w600,
                           fontSize: 14.5,
                         ),
-                      ),
-                      IconButton(
-                        padding: EdgeInsets.all(0),
-                        icon: isSelected
-                            ? Icon(Icons.remove_circle)
-                            : Icon(Icons.add_circle),
-                        onPressed: () {},
-                        iconSize: 20,
                       ),
                     ],
                   ),

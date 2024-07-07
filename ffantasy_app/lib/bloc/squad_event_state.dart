@@ -9,8 +9,10 @@ final class SquadAddedState extends SquadEventState {
   final List<int> squad;
   final int cost;
   final int home, away;
+  final List<int> positionPlayers;
 
-  SquadAddedState(this.squad, this.cost, this.home, this.away);
+  SquadAddedState(
+      this.squad, this.cost, this.home, this.away, this.positionPlayers);
 }
 
 final class SquadAddFailedState extends SquadEventState {}
