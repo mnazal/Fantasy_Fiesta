@@ -12,7 +12,7 @@ It was a project intended to launch to conduct fantasy football competition in m
 
 **Client:** Flutter, Bloc State management
 
-**Server:** Node.js, Express.js, MongoDB
+**Server:** Node.js, MongoDB
 
 
 ## Features
