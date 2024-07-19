@@ -6,13 +6,16 @@ sealed class SquadEventState {}
 final class SquadInitialState extends SquadEventState {}
 
 final class SquadAddedState extends SquadEventState {
-  final List<int> squad;
+  final List<List<int>> squad;
   final int cost;
   final int home, away;
-  final List<int> positionPlayers;
 
   SquadAddedState(
-      this.squad, this.cost, this.home, this.away, this.positionPlayers);
+    this.squad,
+    this.cost,
+    this.home,
+    this.away,
+  );
 }
 
 final class SquadAddFailedState extends SquadEventState {}

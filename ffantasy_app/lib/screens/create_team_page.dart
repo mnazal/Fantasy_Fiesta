@@ -1,5 +1,6 @@
 import 'package:ffantasy_app/bloc/position_bloc.dart';
 import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/widgets/team%20preview/squad_preview.dart';
 import 'package:ffantasy_app/widgets/create_team/player_card.dart';
 import 'package:ffantasy_app/widgets/create_team/team_stats_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,21 +28,19 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
     super.initState();
   }
 
-  Color containerColor = Colors.white;
   final int _totalPlayers = 11;
-  int containerColorCheck = 1;
-
   int creditsLeft = 100;
+  int numberOfGoalKeepers = 0;
+  int numberofDefenders = 0;
+  int numberOfMidfielders = 0;
+  int numberofForwards = 0;
 
   @override
   Widget build(BuildContext context) {
     int playernumber = 0;
     int homeNumber = 0;
     int awayNumber = 0;
-    // ignore: unused_local_variable
-    int positioned = 0, gk = 0, df = 0, mf = 0, fw = 0;
-    bool isWeb = MediaQuery.of(context).size.width >= 1024 ? true : false;
-    ;
+    bool isWeb = MediaQuery.of(context).size.width >= 1024;
 
     final List<Map<String, dynamic>> teamPlayers = players.where((player) {
       return player['team'] == widget.homeTeamName ||
@@ -49,59 +48,72 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
     }).toList();
 
     List<String> positions = ['GK', 'DEF', 'MID', 'FWD'];
+    bool isButtonDisabled = true;
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 34, 1, 90),
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Color.fromARGB(255, 255, 255, 255),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SquadEventBloc(),
+        ),
+        BlocProvider(
+          create: (context) => PositionBloc(),
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 34, 1, 90),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          title: const Text(
+            'Create Your Team',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
         ),
-        title: const Column(
-          children: [
-            Text(
-              'Create Your Team',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: BlocConsumer<SquadEventBloc, SquadEventState>(
-        listener: (context, state) {
-          if (state is SquadAddedState) {
-            creditsLeft = 100 - state.cost;
-            playernumber = state.squad.length;
-            homeNumber = state.home;
-            awayNumber = state.away;
-            if (creditsLeft < 0) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('You have used more than your Available Credits'),
-                duration: Duration(seconds: 2),
-              ));
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: BlocConsumer<SquadEventBloc, SquadEventState>(
+          listener: (context, state) {
+            if (state is SquadAddedState) {
+              creditsLeft = 100 - state.cost;
+
+              homeNumber = state.home;
+              awayNumber = state.away;
+              numberOfGoalKeepers = state.squad[0].length;
+              numberofDefenders = state.squad[1].length;
+              numberOfMidfielders = state.squad[2].length;
+              numberofForwards = state.squad[3].length;
+              playernumber = homeNumber + awayNumber;
+              if (playernumber == 1) {
+                setState(() {
+                  isButtonDisabled = false;
+                });
+              }
+              if (creditsLeft < 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                        Text('You have used more than your Available Credits'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
             }
-          }
-        },
-        builder: (context, state) {
-          return Padding(
+          },
+          builder: (context, state) {
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0.0),
               child: Column(
                 children: [
-                  TeamStats(
-                    playernumber: playernumber,
-                    homeNumber: homeNumber,
-                    awayNumber: awayNumber,
-                    creditsLeft: creditsLeft,
-                    totalPlayers: _totalPlayers,
-                  ),
+                  TeamStats(),
                   SizedBox(
                     height: 50,
                     child: TabBar(
@@ -239,9 +251,11 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                   ),
                   Container(
                     height: 80,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(155, 225, 225, 225)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 13),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(155, 225, 225, 225),
+                    ),
                     alignment: Alignment.bottomCenter,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,23 +264,43 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                         FractionallySizedBox(
                           heightFactor: 0.85,
                           child: ElevatedButton(
+                            statesController: MaterialStatesController(),
                             onPressed: () {
-                              // Add your onPressed code here!
+                              int checked = squadChecks(
+                                  playernumber,
+                                  numberOfGoalKeepers,
+                                  numberofDefenders,
+                                  numberOfMidfielders,
+                                  numberofForwards);
+                              if (checked == 0) {
+                                showBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return Scaffold();
+                                    });
+                              } else if (checked == -1) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content:
+                                      Text('You have to select 11 players'),
+                                  duration: const Duration(seconds: 2),
+                                ));
+                              } else {
+                                showMessage(checked, context);
+                              }
                             },
-                            style: const ButtonStyle(
-                                // padding: MaterialStatePropertyAll(
-                                //     EdgeInsets.symmetric(
-                                //         vertical: 13, horizontal: 18)),
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 255, 255, 255)),
-                                shape: MaterialStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        side: BorderSide(width: 0.1),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(2)))),
-                                surfaceTintColor: MaterialStatePropertyAll(
-                                    Colors.white)), // Deep blue color
-
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color.fromARGB(255, 255, 255, 255)),
+                              shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                side: BorderSide(width: 0.1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2)),
+                              )),
+                              surfaceTintColor:
+                                  MaterialStateProperty.all(Colors.white),
+                            ),
                             child: const Text(
                               'Preview Team',
                               style: TextStyle(
@@ -276,28 +310,27 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 12,
-                        ),
+                        const SizedBox(width: 12),
                         FractionallySizedBox(
                           heightFactor: 0.85,
                           child: ElevatedButton(
                             onPressed: () {
                               // Add your onPressed code here!
                             },
-                            style: const ButtonStyle(
-                                padding: MaterialStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        vertical: 11, horizontal: 18)),
-                                shape: MaterialStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(2)))),
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 34, 1, 90)),
-                                surfaceTintColor: MaterialStatePropertyAll(
-                                    Colors.white)), // Deep blue color
-
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(
+                                      vertical: 11, horizontal: 18)),
+                              shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2)),
+                              )),
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color.fromARGB(255, 34, 1, 90)),
+                              surfaceTintColor:
+                                  MaterialStateProperty.all(Colors.white),
+                            ),
                             child: Row(
                               children: [
                                 const Text(
@@ -307,24 +340,57 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 30,
-                                ),
-                                Icon(
-                                  Icons.save,
-                                  color: Colors.white,
-                                )
+                                const SizedBox(width: 30),
+                                const Icon(Icons.save, color: Colors.white),
                               ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
-              ));
-        },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+int squadChecks(int totalPlayers, int gk, int df, int mf, int fw) {
+  if (totalPlayers < 11) {
+    return -1;
+  } else {
+    if (gk < 1) {
+      return -2;
+    } else if (df < 3) {
+      return -3;
+    } else if (mf < 3) {
+      return -4;
+    } else if (fw < 1) {
+      return -5;
+    }
+  }
+  return 0;
+}
+
+void showMessage(int position, BuildContext messengercontext) {
+  int index = (-position - 2);
+  String? positionName = positionLimit[index]['name'];
+  int posLimit = int.parse(positionLimit[index]['limit']!);
+  String message = posLimit == 1 ? 'player' : 'players';
+
+  ScaffoldMessenger.of(messengercontext).showSnackBar(SnackBar(
+    content: Text('Select at least $posLimit $message from $positionName'),
+    duration: const Duration(seconds: 2),
+  ));
+}
+
+List<Map<String, String>> positionLimit = [
+  {'name': 'Goalkeepers', 'limit': '1'},
+  {'name': 'Defenders', 'limit': '3'},
+  {'name': 'Midfielders', 'limit': '3'},
+  {'name': 'Forwards', 'limit': '1'}
+];

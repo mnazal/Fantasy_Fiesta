@@ -1,67 +1,78 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ffantasy_app/data/players.dart';
 import 'package:flutter/material.dart';
 
 part 'squad_event_event.dart';
 part 'squad_event_state.dart';
 
-int cost = 0;
 int homePlayers = 0;
 int awayPlayers = 0;
-int gk = 0, df = 0, mf = 0, fw = 0;
-List<int> playerPositions = [0, 0, 0, 0];
 int flag = 0;
+
+int sumPlayers(List<List<int>> squad) {
+  int sum = 0;
+  for (List<int> positionList in squad) {
+    sum += positionList.length;
+  }
+  return sum;
+}
 
 class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
   SquadEventBloc() : super(SquadInitialState()) {
     on<AddPlayerEvent>((event, emit) {
+      print('AddPlayerEvent received');
       if (state is SquadAddedState) {
-        final List<int> updatedSquad =
+        final List<List<int>> updatedSquad =
             List.from((state as SquadAddedState).squad);
+        int squadCost = (state as SquadAddedState).cost;
 
-        if (updatedSquad.contains(event.playerid)) {
-          updatedSquad.remove(event.playerid);
-          playerPositions[event.position]--;
+        if (updatedSquad[event.position].contains(event.playerid)) {
+          updatedSquad[event.position].remove(event.playerid);
           if (event.ishome) {
             homePlayers--;
           } else {
             awayPlayers--;
           }
-
-          //cost -= playerPrice;
+          squadCost -= event.playerCost;
+          print(
+              'Player removed. Home players: $homePlayers, Away players: $awayPlayers');
         } else {
-          if (updatedSquad.length < 11) {
+          if (sumPlayers(updatedSquad) < 11) {
             flag = 0;
+            int numberofPlayersinPosition = updatedSquad[event.position].length;
             if (event.position == 0) {
-              if (playerPositions[0] < 1) {
+              if (numberofPlayersinPosition < 1) {
                 flag = 1;
+              } else {
+                showMessage("Goalkeepers", 1, event.context);
               }
             } else if (event.position == 1) {
-              if (playerPositions[1] < 5) {
+              if (numberofPlayersinPosition < 5) {
                 flag = 1;
+              } else {
+                showMessage("Defenders", 5, event.context);
               }
             } else if (event.position == 2) {
-              if (playerPositions[2] < 5) {
+              if (numberofPlayersinPosition < 5) {
                 flag = 1;
+              } else {
+                showMessage("Midfielders", 5, event.context);
               }
             } else if (event.position == 3) {
-              playerPositions[3] < 3 ? flag = 1 : flag = 0;
+              numberofPlayersinPosition < 3
+                  ? flag = 1
+                  : showMessage("Forwards", 3, event.context);
             }
             if (flag == 1) {
               if (event.ishome && homePlayers < 7) {
                 homePlayers++;
-                updatedSquad.add(event.playerid);
-                playerPositions[event.position]++;
-              } else if (awayPlayers < 7 && event.ishome == false) {
+                updatedSquad[event.position].add(event.playerid);
+              } else if (awayPlayers < 7 && !event.ishome) {
                 awayPlayers++;
-                updatedSquad.add(event.playerid);
-                playerPositions[event.position]++;
+                updatedSquad[event.position].add(event.playerid);
               }
-            } else {
-              ScaffoldMessenger.of(event.context).showSnackBar(const SnackBar(
-                content: Text('Player Limit from a position Exceeded.'),
-                duration: Duration(seconds: 2),
-              ));
+              squadCost += event.playerCost;
+              print(
+                  'Player added. Home players: $homePlayers, Away players: $awayPlayers');
             }
           } else {
             ScaffoldMessenger.of(event.context).showSnackBar(const SnackBar(
@@ -69,28 +80,26 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
               duration: Duration(seconds: 2),
             ));
           }
-          //cost += playerPrice;
-        }
-        cost = 0;
-
-        for (int playerid in updatedSquad) {
-          for (var element in players) {
-            if (int.parse(element['id']) == (playerid)) {
-              var currentplayerprice = element['price'];
-              if (currentplayerprice is int) {
-                cost += element['price'] as int;
-              }
-            }
-          }
         }
 
-        emit(SquadAddedState(
-            updatedSquad, cost, homePlayers, awayPlayers, playerPositions));
+        emit(
+            SquadAddedState(updatedSquad, squadCost, homePlayers, awayPlayers));
       }
     });
 
-    // Initialize with an empty list
-    // ignore: invalid_use_of_visible_for_testing_member
-    emit(SquadAddedState(const [], 0, 0, 0, const []));
+    // Initialize with an empty list of lists
+    emit(SquadAddedState(
+      List.generate(4, (_) => []),
+      0,
+      0,
+      0,
+    ));
   }
+}
+
+void showMessage(String position, int limit, BuildContext messengercontext) {
+  ScaffoldMessenger.of(messengercontext).showSnackBar(SnackBar(
+    content: Text('Select only $limit from $position'),
+    duration: const Duration(seconds: 2),
+  ));
 }

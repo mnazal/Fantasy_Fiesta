@@ -26,25 +26,21 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isSelected = false;
     Color white = Colors.white;
     Color containerColor = white;
     return BlocBuilder<SquadEventBloc, SquadEventState>(
       builder: (context, state) {
         if (state is SquadAddedState) {
-          if (state.squad.contains(playerid)) {
+          if (checkPlayerSelected(state.squad, playerid)) {
             containerColor = Colors.amber;
-            isSelected = true;
           } else {
             containerColor = Colors.white;
-            isSelected = false;
           }
         }
         return GestureDetector(
           onTap: () {
-            context
-                .read<SquadEventBloc>()
-                .add(AddPlayerEvent(playerid, context, home, position));
+            context.read<SquadEventBloc>().add(
+                AddPlayerEvent(playerid, context, home, position, credits));
           },
           child: Container(
             decoration: BoxDecoration(
@@ -52,13 +48,14 @@ class PlayerCard extends StatelessWidget {
               color: containerColor,
             ),
             height: 75,
-            padding: EdgeInsets.only(left: 10, top: 3, bottom: 3, right: 19),
+            padding:
+                const EdgeInsets.only(left: 10, top: 3, bottom: 3, right: 19),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  padding: EdgeInsets.all(0),
-                  icon: Icon(Icons.help),
+                  padding: const EdgeInsets.all(0),
+                  icon: const Icon(Icons.help),
                   onPressed: () {},
                   iconSize: 20,
                 ),
@@ -70,7 +67,7 @@ class PlayerCard extends StatelessWidget {
                       Image.asset(
                         playerImage,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       Padding(
@@ -79,12 +76,12 @@ class PlayerCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(
                               playerName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 34, 1, 90),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.5,
@@ -92,7 +89,7 @@ class PlayerCard extends StatelessWidget {
                             ),
                             Text(
                               teamName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color.fromARGB(155, 34, 1, 90),
                                 fontSize: 12,
                               ),
@@ -110,7 +107,7 @@ class PlayerCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
                       totalPoints.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 34, 1, 90),
                         fontWeight: FontWeight.w600,
                         fontSize: 14.5,
@@ -118,7 +115,7 @@ class PlayerCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Flexible(
@@ -129,7 +126,7 @@ class PlayerCard extends StatelessWidget {
                       Text(
                         credits.toString(),
                         textAlign: TextAlign.right,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 34, 1, 90),
                           fontWeight: FontWeight.w600,
                           fontSize: 14.5,
@@ -145,4 +142,15 @@ class PlayerCard extends StatelessWidget {
       },
     );
   }
+}
+
+bool checkPlayerSelected(List<List<int>> squad, int playerid) {
+  for (List<int> positionList in squad) {
+    for (int player in positionList) {
+      if (player == playerid) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
