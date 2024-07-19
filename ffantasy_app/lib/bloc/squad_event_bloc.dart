@@ -19,7 +19,6 @@ int sumPlayers(List<List<int>> squad) {
 class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
   SquadEventBloc() : super(SquadInitialState()) {
     on<AddPlayerEvent>((event, emit) {
-      print('AddPlayerEvent received');
       if (state is SquadAddedState) {
         final List<List<int>> updatedSquad =
             List.from((state as SquadAddedState).squad);
@@ -33,8 +32,6 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
             awayPlayers--;
           }
           squadCost -= event.playerCost;
-          print(
-              'Player removed. Home players: $homePlayers, Away players: $awayPlayers');
         } else {
           if (sumPlayers(updatedSquad) < 11) {
             flag = 0;
@@ -71,8 +68,6 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
                 updatedSquad[event.position].add(event.playerid);
               }
               squadCost += event.playerCost;
-              print(
-                  'Player added. Home players: $homePlayers, Away players: $awayPlayers');
             }
           } else {
             ScaffoldMessenger.of(event.context).showSnackBar(const SnackBar(
@@ -88,6 +83,7 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
     });
 
     // Initialize with an empty list of lists
+    // ignore: invalid_use_of_visible_for_testing_member
     emit(SquadAddedState(
       List.generate(4, (_) => []),
       0,
