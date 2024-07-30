@@ -11,6 +11,7 @@ async function getSquadList(url) {
         const squad = $('tbody.Table__TBODY tr').map((index, element) =>{
             player_number=player_number+1;
             const playerName = $(element).find('a.AnchorLink').text().trim();
+            const age = $(element).find('td.Table__TD').eq(2).text().trim();
             
             const jerseyNumber = $(element).find('span.pl2.n10').text().trim();
             const position = $(element).find('td:nth-child(2) div').text().trim();
@@ -23,7 +24,7 @@ async function getSquadList(url) {
             }
             
             
-            return { player_number, playerid, playerName, jerseyNumber, position };
+            return { player_number, playerid, playerName, jerseyNumber, position ,age};
         }).get();
 
         return squad;
