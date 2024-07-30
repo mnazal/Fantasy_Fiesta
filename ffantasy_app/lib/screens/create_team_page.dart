@@ -1,19 +1,32 @@
-import 'package:ffantasy_app/bloc/position_bloc.dart';
+import 'dart:ffi';
+
 import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/private/api/api.dart';
+import 'package:ffantasy_app/private/api/player.dart';
 import 'package:ffantasy_app/widgets/team_preview/squad_preview.dart';
 import 'package:ffantasy_app/widgets/create_team/player_card.dart';
 import 'package:ffantasy_app/widgets/create_team/team_stats_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../data/players.dart';
 
 class CreateTeam extends StatefulWidget {
   final String homeTeamName;
   final String awayTeamName;
+  final String matchID, awayTeamID, homeTeamID, homeImage, awayImage;
 
   const CreateTeam(
-      {super.key, required this.homeTeamName, required this.awayTeamName});
+      {super.key,
+      required this.homeTeamName,
+      required this.awayTeamName,
+      required this.matchID,
+      required this.awayTeamID,
+      required this.homeTeamID,
+      required this.homeImage,
+      required this.awayImage});
 
   @override
   State<CreateTeam> createState() => _CreateTeamState();
@@ -23,10 +36,13 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
   TabController? _tabController;
   late AnimationController _bottomSheetAnimationController;
   late Animation<double> _bottomSheetAnimation;
+  late Future<List<Player>> _squadfuture;
 
   @override
   void initState() {
     super.initState();
+    _squadfuture =
+        fetchSquad(int.parse(widget.homeTeamID), int.parse(widget.awayTeamID));
     _tabController = TabController(length: 4, vsync: this);
 
     _bottomSheetAnimationController = AnimationController(
@@ -45,11 +61,53 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
   }
 
   final int _totalPlayers = 11;
-  int creditsLeft = 100;
+  double creditsLeft = 100;
   int numberOfGoalKeepers = 0;
   int numberofDefenders = 0;
   int numberOfMidfielders = 0;
   int numberofForwards = 0;
+
+  Future<List<Player>> fetchSquad(int squadID1, int squadID2) async {
+    // Build the URIs for the two squads
+    final Uri uri1 = Uri.parse('$squadListUri$squadID1');
+    final Uri uri2 = Uri.parse('$squadListUri$squadID2');
+
+    try {
+      // Fetch data for the first squad
+      final response1 = await http.get(uri1);
+      if (response1.statusCode != 200) {
+        throw Exception('Failed to load squad for ID $squadID1');
+      }
+
+      final List<dynamic> jsonData1 = json.decode(response1.body);
+      List<Player> squad1 = jsonData1
+          .map((json) => Player.fromJson(json, widget.homeTeamName))
+          .toList();
+
+      // Fetch data for the second squad
+      final response2 = await http.get(uri2);
+      if (response2.statusCode != 200) {
+        throw Exception('Failed to load squad for ID $squadID2');
+      }
+      final List<dynamic> jsonData2 = json.decode(response2.body);
+      List<Player> squad2 = jsonData2
+          .map((json) => Player.fromJson(json, widget.awayTeamName))
+          .toList();
+
+      // Combine the two squads
+      List<Player> combinedSquad = squad1 + squad2;
+
+      // List<Player> updatedSquad = combinedSquad
+      //     .where((element) =>
+      //         element.marketValue != "null" || element.marketValue != "0.0")
+      //     .toList();
+
+      return combinedSquad;
+    } catch (e) {
+      print('Error fetching squads: $e');
+      return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,16 +121,13 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
           player['team'] == widget.awayTeamName;
     }).toList();
 
-    List<String> positions = ['GK', 'DEF', 'MID', 'FWD'];
+    List<String> positions = ['G', 'D', 'M', 'F'];
     bool isButtonDisabled = true;
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => SquadEventBloc(),
-        ),
-        BlocProvider(
-          create: (context) => PositionBloc(),
         ),
       ],
       child: Scaffold(
@@ -129,7 +184,12 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
               padding: const EdgeInsets.symmetric(horizontal: 0.0),
               child: Column(
                 children: [
-                  TeamStats(),
+                  TeamStats(
+                    homeImage: widget.homeImage,
+                    awayImage: widget.awayImage,
+                    homeTeam: widget.homeTeamName,
+                    awayTeam: widget.awayTeamName,
+                  ),
                   SizedBox(
                     height: 50,
                     child: TabBar(
@@ -149,11 +209,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                       indicatorColor: const Color.fromARGB(255, 224, 167, 11),
                       indicatorWeight: 5,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      onTap: (tabIndex) {
-                        context
-                            .read<PositionBloc>()
-                            .add(SelectedPositionEvent(tabIndex));
-                      },
+                      onTap: (tabIndex) {},
                     ),
                   ),
                   Expanded(
@@ -228,37 +284,59 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                 ),
                               ),
                               Expanded(
-                                child: ListView.builder(
-                                  itemCount: teamPlayers
-                                      .where((player) =>
-                                          player['position'] == positions[i])
-                                      .toList()
-                                      .length,
-                                  itemBuilder: (context, index) {
-                                    var filteredPlayers = teamPlayers
-                                        .where((player) =>
-                                            player['position'] == positions[i])
-                                        .toList();
+                                child: FutureBuilder<List<Player>>(
+                                    future: _squadfuture,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                            child: Text(
+                                                'Error: ${snapshot.error}'));
+                                      } else if (!snapshot.hasData ||
+                                          snapshot.data!.isEmpty) {
+                                        return const Center(
+                                            child: Text('No matches found'));
+                                      } else {
+                                        final squad = snapshot.data!;
 
-                                    return PlayerCard(
-                                      playerid: int.parse(
-                                          filteredPlayers[index]['id']),
-                                      playerName: filteredPlayers[index]
-                                          ['name'],
-                                      playerImage: filteredPlayers[index]
-                                          ['image'],
-                                      totalPoints: filteredPlayers[index]
-                                          ['totalPoints'],
-                                      credits: filteredPlayers[index]['price'],
-                                      teamName: filteredPlayers[index]['team'],
-                                      home: filteredPlayers[index]['team'] ==
-                                              widget.homeTeamName
-                                          ? true
-                                          : false,
-                                      position: i,
-                                    );
-                                  },
-                                ),
+                                        final positionFilteredSquad = squad
+                                            .where((element) =>
+                                                element.position ==
+                                                positions[i])
+                                            .toList();
+
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              positionFilteredSquad.length,
+                                          itemBuilder: (context, index) {
+                                            final player =
+                                                positionFilteredSquad[index];
+
+                                            print(player);
+
+                                            return PlayerCard(
+                                              playerid:
+                                                  int.parse(player.playerID),
+                                              playerName: player.playerName,
+                                              //layerImage: player.playerImage,
+                                              totalPoints: 0,
+                                              credits: 0,
+                                              teamName: player.teamName,
+                                              home: player.teamName ==
+                                                      widget.homeTeamName
+                                                  ? true
+                                                  : false,
+                                              position: i,
+                                              age: player.age,
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }),
                               ),
                             ],
                           ),

@@ -13,6 +13,7 @@ async function getMatchesList(url) {
 
         
         const $ = cheerio.load(data);
+        let match_number=0
 
   
         const matches = $('tbody.Table__TBODY .Table__TR--sm').map((index, element) => {
@@ -54,7 +55,9 @@ async function getMatchesList(url) {
             return { match_number, matchId, awayTeamId, awayTeam, homeTeamId, homeTeam, time, venue };
         }).get();
 
-        return matches
+        const selectedMatches=matches.slice(0,6);
+
+        return selectedMatches
     } catch (error) {
         console.error('Error fetching data:', error);
     }

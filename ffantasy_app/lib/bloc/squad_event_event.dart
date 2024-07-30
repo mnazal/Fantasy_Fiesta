@@ -8,7 +8,7 @@ class AddPlayerEvent extends SquadEventEvent {
   final BuildContext context;
   final bool ishome;
   final int position;
-  final int playerCost;
+  final double playerCost;
 
   AddPlayerEvent(
       this.playerid, this.context, this.ishome, this.position, this.playerCost);

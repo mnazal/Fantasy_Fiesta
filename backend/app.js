@@ -3,24 +3,45 @@ const { getMatchesList } = require('./src/getMatches');
 const { getSquadList } = require('./src/getSquad');
 const { getPlayerDetails } = require('./src/getPlayerDetail');
 const { calculatePlayerValue } = require('./src/playerValueAgorithm');
+const cors = require('cors');
 
 const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 600 }); //
+const cache = new NodeCache({ stdTTL: 700000 }); //
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
-app.get('/match_list', async (req, res) => {
+app.use(cors());
+
+
+let i=0;
+
+
+
+
+app.get('/match_list/', async (req, res) => {
+  console.log("Incoming MatchList Request");
   try {
     const tournament = 'fifa.olympics';
     const matchListUrl = `https://www.espn.in/football/fixtures?league=${tournament}`;
-    const matches = await getMatchesList(matchListUrl); // Await the async function
+    
+    // Check cache first
+    const cachedMatches = cache.get(matchListUrl);
+    if (cachedMatches) {
+      return res.json(cachedMatches); // Return cached data
+    }
+    
+    // Fetch data if not cached
+    const matches = await getMatchesList(matchListUrl);
 
     if (!matches || matches.length === 0) {
       res.status(404).send('No matches found');
     } else {
+      // Cache the fetched data
+      cache.set(matchListUrl, matches);
       res.json(matches); // Send the data as JSON
+      console.log(" MatchList Sent");
     }
   } catch (error) {
     console.error('Error fetching match data:', error);
@@ -28,10 +49,11 @@ app.get('/match_list', async (req, res) => {
   }
 });
 
+app.get('/squad/:teamID', async (req, res) => {
+  console.log("Incoming SQUAD Request");
+  const { teamID } = req.params;
 
-app.get('/squad', async (req, res) => {
   try {
-    const teamID = 359;
     const cacheKey = `squad_${teamID}`;
     let squad = cache.get(cacheKey);
 
@@ -45,34 +67,8 @@ app.get('/squad', async (req, res) => {
       }
       cache.set(cacheKey, squad); // Cache the squad list
     }
-
-    const playerPromises = squad.map(async (player) => {
-      if (!player.playerName) return player;
-
-      try {
-        const playerNameFormatted = player.playerName.replace(' ', '+');
-        const playerDetailsCacheKey = `playerDetails_${playerNameFormatted}`;
-        let playerDetails = cache.get(playerDetailsCacheKey);
-
-        if (!playerDetails) {
-          const playerFinderURL = `https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${playerNameFormatted}`;
-          playerDetails = await getPlayerDetails(playerFinderURL);
-          cache.set(playerDetailsCacheKey, playerDetails); // Cache player details
-        }
-
-        if (playerDetails) {
-          player.marketValue = calculatePlayerValue(player.position, player.age, playerDetails.marketValue);
-          player.playersNetImage = playerDetails.playerImage.replace('small', 'medium');
-        }
-      } catch (err) {
-        console.error(`Error fetching details for player: ${player.playerName}`, err);
-      }
-
-      return player;
-    });
-
-    const updatedSquad = await Promise.all(playerPromises);
-    res.json(updatedSquad);
+    res.json(squad);
+    console.log(`Squad sent ${i}`);
   } catch (error) {
     console.error('Error fetching squad data:', error);
     res.status(500).send('Internal Server Error');
@@ -80,17 +76,22 @@ app.get('/squad', async (req, res) => {
 });
 
 
+app.use(express.json());
 
 
-  app.get('/player_details', async (req, res) => {
+  app.post('/player_details/', async (req, res) => {
+    
+    
+    const { player_name, key2, key3 } = req.body;
     try {
-      const player_name ='Michael+Rosaik';
+      
       const playerFinderURL = `https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${player_name}`;
-      const player = await getPlayerDetails(playerFinderURL); // Await the async function
+      const player = await getPlayerDetails(playerFinderURL, key2, key3); // Await the async function
   
       if (!player || player.length === 0) {
         res.status(404).send('No Player found');
       } else {
+        console.log(player);
         res.json(player); // Send the data as JSON
       }
     } catch (error) {

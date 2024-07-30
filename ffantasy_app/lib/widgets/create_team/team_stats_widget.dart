@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TeamStats extends StatefulWidget {
+  final String homeImage, awayImage, homeTeam, awayTeam;
+
+  const TeamStats(
+      {super.key,
+      required this.homeImage,
+      required this.awayImage,
+      required this.homeTeam,
+      required this.awayTeam});
   @override
   State<TeamStats> createState() => _TeamStatsState();
 }
@@ -14,7 +22,7 @@ class _TeamStatsState extends State<TeamStats> {
 
   int awayNumber = 0;
 
-  int creditsLeft = 0;
+  double creditsLeft = 0;
 
   int _totalPlayers = 11;
 
@@ -23,7 +31,7 @@ class _TeamStatsState extends State<TeamStats> {
     return BlocConsumer<SquadEventBloc, SquadEventState>(
       listener: (context, state) {
         if (state is SquadAddedState) {
-          creditsLeft = 100 - state.cost;
+          creditsLeft = 150 - state.cost;
 
           homeNumber = state.home;
           awayNumber = state.away;
@@ -73,51 +81,62 @@ class _TeamStatsState extends State<TeamStats> {
                         )
                       ],
                     ),
-                    const SizedBox(width: 20),
-                    Image.asset(
-                      'assets/barcelona.png',
-                      fit: BoxFit.fitHeight,
-                      alignment: Alignment.center,
-                      height: 50,
-                      width: 50,
-                    ),
-                    Column(
-                      children: [
-                        const Text(
-                          'BAR',
-                          style: TextStyle(
-                              color: Color.fromARGB(160, 255, 255, 255),
-                              fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          homeNumber.toString(),
+                    Column(children: [
+                      Image.network(
+                        widget.homeImage,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text('Error');
+                        },
+                        width: 45,
+                        height: 45,
+                      ),
+                      SizedBox(
+                        width: 50,
+                        child: Text(
+                          widget.homeTeam,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text(
-                          'RM',
-                          style: TextStyle(
-                              color: Color.fromARGB(160, 255, 255, 255),
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12),
                         ),
-                        Text(
-                          awayNumber.toString(),
+                      ),
+                    ]),
+                    Text(
+                      homeNumber.toString(),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      awayNumber.toString(),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                    Column(children: [
+                      Image.network(
+                        widget.awayImage,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text('Error');
+                        },
+                        width: 45,
+                        height: 45,
+                      ),
+                      SizedBox(
+                        width: 50,
+                        child: Text(
+                          widget.awayTeam,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                    Image.asset(
-                      'assets/madrid.png',
-                      fit: BoxFit.fitHeight,
-                      alignment: Alignment.center,
-                      height: 50,
-                      width: 50,
-                    ),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12),
+                        ),
+                      ),
+                    ]),
                     Column(
                       children: [
                         const Text(

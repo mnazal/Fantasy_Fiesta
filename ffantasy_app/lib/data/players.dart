@@ -244,7 +244,7 @@ List<Map<String, dynamic>> players = [
   }
 ];
 
-List<String> positions = ['GK', 'DEF', 'MID', 'FWD'];
+List<String> positions = ['G', 'D', 'M', 'F'];
 
 List<String> numberConstraints = [
   'Select 1 Goalkeeper',

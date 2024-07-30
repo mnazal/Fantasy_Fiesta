@@ -7,7 +7,7 @@ final class SquadInitialState extends SquadEventState {}
 
 final class SquadAddedState extends SquadEventState {
   final List<List<int>> squad;
-  final int cost;
+  final double cost;
   final int home, away;
 
   SquadAddedState(

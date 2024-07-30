@@ -18,9 +18,9 @@ class HomeQuote extends StatelessWidget {
     final randomID = random.nextInt(footballQuotes.length);
     final footballer = footballQuotes[randomID];
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Container(
-            height: 144,
+            height: 160,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.deepPurple),

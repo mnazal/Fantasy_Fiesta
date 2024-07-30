@@ -74,6 +74,18 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "http",
+      "rootUri": "file:///C:/Users/moham/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///C:/Users/moham/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "lints",
       "rootUri": "file:///C:/Users/moham/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
@@ -158,6 +170,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "typed_data",
+      "rootUri": "file:///C:/Users/moham/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///C:/Users/moham/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
@@ -176,7 +194,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-07-20T17:40:03.254716Z",
+  "generated": "2024-07-30T11:59:30.409730Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

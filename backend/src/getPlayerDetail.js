@@ -1,9 +1,10 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+
 const { calculatePlayerValue } = require('./playerValueAgorithm');
 
-async function getPlayerDetails(url) {
+async function getPlayerDetails(url, age, position) {
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
@@ -25,12 +26,15 @@ async function getPlayerDetails(url) {
                         marketValue=parseFloat(someValue.split('€')[1].replace('m',''));
                    }
                }
+
+               const newMarketValue=marketValue==0 ?0: calculatePlayerValue(position,parseInt(age),marketValue);
+               console.log(newMarketValue);
            
             
 
             return {
                 playerImage,
-                marketValue
+                newMarketValue
             };
         }).get()[0]; // Get the first (and only) result
 

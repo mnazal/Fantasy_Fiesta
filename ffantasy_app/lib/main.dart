@@ -1,4 +1,3 @@
-import 'package:ffantasy_app/bloc/position_bloc.dart';
 import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
 import 'package:ffantasy_app/screens/create_team_page.dart';
 import 'package:ffantasy_app/screens/home_page.dart';
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255)),
       debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
+      home: HomePage(),
     );
   }
 }

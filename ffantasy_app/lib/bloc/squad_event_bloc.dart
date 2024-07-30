@@ -22,7 +22,7 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
       if (state is SquadAddedState) {
         final List<List<int>> updatedSquad =
             List.from((state as SquadAddedState).squad);
-        int squadCost = (state as SquadAddedState).cost;
+        double squadCost = (state as SquadAddedState).cost;
 
         if (updatedSquad[event.position].contains(event.playerid)) {
           updatedSquad[event.position].remove(event.playerid);

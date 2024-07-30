@@ -1,37 +1,90 @@
+import 'dart:convert';
+
 import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/data/players.dart';
+import 'package:ffantasy_app/private/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
-class PlayerCard extends StatelessWidget {
+class PlayerCard extends StatefulWidget {
   final String teamName;
-  final int credits;
+  final double credits;
   final int totalPoints;
-  final String playerImage;
   final String playerName;
   final int playerid;
   final bool home;
   final int position;
+  final String age;
 
   const PlayerCard({
     super.key,
     required this.playerName,
-    required this.playerImage,
     required this.totalPoints,
     required this.credits,
     required this.teamName,
     required this.playerid,
     required this.home,
     required this.position,
+    required this.age,
   });
 
   @override
+  State<PlayerCard> createState() => _PlayerCardState();
+}
+
+class _PlayerCardState extends State<PlayerCard> {
+  late Future<Map<String, dynamic>> playerDetails;
+  late Map<String, dynamic> playerData;
+  bool isDataLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    playerDetails = sendPostRequest();
+    playerDetails.then((data) {
+      setState(() {
+        playerData = data;
+        isDataLoaded = true;
+      });
+    });
+  }
+
+  Future<Map<String, dynamic>> sendPostRequest() async {
+    final url = Uri.parse(playerUri); // Replace with your API endpoint
+    final headers = {"Content-Type": "application/json"};
+
+    final body = jsonEncode({
+      "player_name": widget.playerName.replaceFirst(' ', '+'),
+      "key2": widget.age,
+      "key3": positions[widget.position],
+    });
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print('Failed to send data. Status code: ${response.statusCode}');
+        return {};
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      return {};
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Color white = Colors.white;
-    Color containerColor = white;
+    final imageUrl = isDataLoaded ? playerData['playerImage'] ?? '' : '';
+    final playerValue =
+        isDataLoaded ? playerData['newMarketValue'] ?? 'N/A' : '';
+
+    Color containerColor = Colors.white;
     return BlocBuilder<SquadEventBloc, SquadEventState>(
       builder: (context, state) {
         if (state is SquadAddedState) {
-          if (checkPlayerSelected(state.squad, playerid)) {
+          if (checkPlayerSelected(state.squad, widget.playerid)) {
             containerColor = Colors.amber;
           } else {
             containerColor = Colors.white;
@@ -39,8 +92,12 @@ class PlayerCard extends StatelessWidget {
         }
         return GestureDetector(
           onTap: () {
-            context.read<SquadEventBloc>().add(
-                AddPlayerEvent(playerid, context, home, position, credits));
+            context.read<SquadEventBloc>().add(AddPlayerEvent(
+                widget.playerid,
+                context,
+                widget.home,
+                widget.position,
+                double.parse(playerValue.replaceAll('N/A', '0'))));
           },
           child: Container(
             decoration: BoxDecoration(
@@ -64,23 +121,35 @@ class PlayerCard extends StatelessWidget {
                   fit: FlexFit.tight,
                   child: Row(
                     children: [
-                      Image.asset(
-                        playerImage,
+                      AnimatedOpacity(
+                        opacity: isDataLoaded ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 500),
+                        child: Container(
+                          width: 46,
+                          height: 46,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(imageUrl
+                                  .toString()
+                                  .replaceFirst('small', 'medium')),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
+                      const SizedBox(width: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
                             Text(
-                              playerName,
+                              widget.playerName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 34, 1, 90),
                                 fontWeight: FontWeight.w600,
@@ -88,7 +157,9 @@ class PlayerCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              teamName,
+                              widget.teamName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                               style: const TextStyle(
                                 color: Color.fromARGB(155, 34, 1, 90),
                                 fontSize: 12,
@@ -106,7 +177,7 @@ class PlayerCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      totalPoints.toString(),
+                      widget.totalPoints.toString(),
                       style: const TextStyle(
                         color: Color.fromARGB(255, 34, 1, 90),
                         fontWeight: FontWeight.w600,
@@ -115,16 +186,14 @@ class PlayerCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 20,
-                ),
+                const SizedBox(width: 20),
                 Flexible(
                   flex: 1,
                   fit: FlexFit.tight,
                   child: Row(
                     children: [
                       Text(
-                        credits.toString(),
+                        playerValue.toString(),
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           color: Color.fromARGB(255, 34, 1, 90),

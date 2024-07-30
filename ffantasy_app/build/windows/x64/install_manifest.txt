@@ -5,6 +5,8 @@ C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.json
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/ARG.jpg
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/cr.png
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/field.jpg
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/field.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/football.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/refresh.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/avatars/zz.png
@@ -13,11 +15,15 @@ C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/Inter-Regular.ttf
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/NotoBold.ttf
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/NotoRegular.ttf
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/intial/bg1.jpg
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/intial/bg2.jpg
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/madrid.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/player/messi.jpeg
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/quotes/beckham.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/quotes/messi.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/quotes/ronaldinho.png
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/sleeves/arg.png
+C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/sleeves/black.png
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/FontManifest.json
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/fonts/MaterialIcons-Regular.otf
 C:/Users/moham/Desktop/dev/Flutter/Fantasy_Fiesta/ffantasy_app/build/windows/x64/runner/Debug/data/flutter_assets/kernel_blob.bin
