@@ -31,7 +31,7 @@ class _TeamStatsState extends State<TeamStats> {
     return BlocConsumer<SquadEventBloc, SquadEventState>(
       listener: (context, state) {
         if (state is SquadAddedState) {
-          creditsLeft = 150 - state.cost;
+          creditsLeft = double.parse((150 - state.cost).toStringAsFixed(1));
 
           homeNumber = state.home;
           awayNumber = state.away;
