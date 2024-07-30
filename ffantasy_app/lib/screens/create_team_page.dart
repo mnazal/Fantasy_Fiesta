@@ -1,6 +1,6 @@
 import 'package:ffantasy_app/bloc/position_bloc.dart';
 import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
-import 'package:ffantasy_app/widgets/team%20preview/squad_preview.dart';
+import 'package:ffantasy_app/widgets/team_preview/squad_preview.dart';
 import 'package:ffantasy_app/widgets/create_team/player_card.dart';
 import 'package:ffantasy_app/widgets/create_team/team_stats_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +21,27 @@ class CreateTeam extends StatefulWidget {
 
 class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
   TabController? _tabController;
+  late AnimationController _bottomSheetAnimationController;
+  late Animation<double> _bottomSheetAnimation;
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+
+    _bottomSheetAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _bottomSheetAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(_bottomSheetAnimationController);
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    _bottomSheetAnimationController.dispose();
+    super.dispose();
   }
 
   final int _totalPlayers = 11;
@@ -273,17 +289,39 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                   numberOfMidfielders,
                                   numberofForwards);
                               if (checked == 0) {
-                                showBottomSheet(
+                                _bottomSheetAnimationController
+                                    .forward()
+                                    .then((value) {
+                                  showBottomSheet(
+                                    elevation: 10,
+                                    enableDrag: true,
                                     context: context,
                                     builder: (context) {
-                                      return Scaffold();
-                                    });
+                                      return FadeTransition(
+                                        opacity: _bottomSheetAnimation,
+                                        child: SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: const Offset(0, 1),
+                                            end: Offset.zero,
+                                          ).animate(
+                                              _bottomSheetAnimationController),
+                                          child: SizedBox(
+                                            child: SquadPreview(),
+                                            height: 600,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).closed.whenComplete(() {
+                                    _bottomSheetAnimationController.reverse();
+                                  });
+                                });
                               } else if (checked == -1) {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                    .showSnackBar(const SnackBar(
                                   content:
                                       Text('You have to select 11 players'),
-                                  duration: const Duration(seconds: 2),
+                                  duration: Duration(seconds: 2),
                                 ));
                               } else {
                                 showMessage(checked, context);

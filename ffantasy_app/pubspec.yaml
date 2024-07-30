@@ -63,11 +63,13 @@ flutter:
   assets:
     - assets/avatars/cr.png
     - assets/avatars/field.jpg
+    - assets/avatars/field.png
     - assets/sleeves/arg.png
     - assets/sleeves/black.png
-    - assets/sleeves/red.png
+    - assets/sleeves/arg.png
     - assets/avatars/ARG.jpg
     - assets/barcelona.png
+    - assets/intial/
     - assets/madrid.png
     - assets/avatars/cr.png
     - assets/player/messi.jpeg
