@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class FantasyNavBar extends StatelessWidget {
   final int selectedIndex;
-  final ValueChanged<int> onItemSelected;
 
   const FantasyNavBar({
     Key? key,
     required this.selectedIndex,
-    required this.onItemSelected,
   }) : super(key: key);
 
   @override
@@ -22,15 +20,15 @@ class FantasyNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       elevation: 30,
       currentIndex: selectedIndex,
-      onTap: onItemSelected,
-      items: [
+      onTap: (index) {},
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: Icon(Icons.sports_soccer),
+          label: 'My Team',
         ),
       ],
     );

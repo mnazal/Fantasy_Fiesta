@@ -5,8 +5,8 @@ class Player {
   final String jerseyNumber;
   final String position;
   final String age;
-  // final String marketValue;
-  // final String playerImage;
+  double marketValue;
+  String playerImage;
   final String teamName;
 
   Player({
@@ -16,8 +16,8 @@ class Player {
     required this.jerseyNumber,
     required this.position,
     required this.age,
-    // required this.marketValue,
-    // required this.playerImage,
+    required this.marketValue,
+    required this.playerImage,
     required this.teamName,
   });
 
@@ -29,11 +29,29 @@ class Player {
         jerseyNumber: json['jerseyNumber'].toString(),
         position: json['position'].toString(),
         age: json['age'].toString(),
-        // marketValue: json['marketValue'].toString(),
-        // playerImage: json['playerImage'].toString(),
+        marketValue: 0,
+        playerImage: '',
         teamName: teamName);
   }
 
+  Player updatePlayerDetails({
+    required double marketValue,
+    required String playerImage,
+  }) {
+    return Player(
+      playerNumber: playerNumber,
+      playerID: playerID,
+      playerName: playerName,
+      jerseyNumber: jerseyNumber,
+      position: position,
+      age: age,
+      marketValue: marketValue,
+      playerImage: playerImage,
+      teamName: teamName,
+    );
+  }
+
+  @override
   String toString() {
     return 'Player { '
         'playerID: $playerID, '
@@ -41,7 +59,10 @@ class Player {
         // 'playerImage: $playerImage, '
         // 'marketValue: $marketValue, '
         'teamName: $teamName, '
-        'position: $position '
+        'position: $position, '
+        'marketValue: $marketValue, '
+        'playerImage: $playerImage, '
+        'age:$age'
         '}';
   }
 }

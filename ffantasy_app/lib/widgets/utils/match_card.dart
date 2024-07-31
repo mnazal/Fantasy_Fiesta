@@ -1,43 +1,37 @@
+import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
+
 import 'package:ffantasy_app/data/country.dart';
+import 'package:ffantasy_app/private/api/api.dart';
 import 'package:ffantasy_app/screens/create_team_page.dart';
+
+import 'package:ffantasy_app/private/api/match.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MatchCard extends StatelessWidget {
-  final String homeTeam;
-  final String awayTeam;
-  final String time;
-  final String matchID, awayTeamID, homeTeamID;
+  final Match match;
 
   const MatchCard({
     Key? key,
-    required this.homeTeam,
-    required this.awayTeam,
-    required this.time,
-    required this.matchID,
-    required this.awayTeamID,
-    required this.homeTeamID,
+    required this.match,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final String homeImage =
-        'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/$homeTeamID.png&scale=crop&cquality=40&location=origin&w=40&h=40';
+        'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/${match.homeTeamID}.png&scale=crop&cquality=40&location=origin&w=40&h=40';
     final String awayImage =
-        'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/$awayTeamID.png&scale=crop&cquality=40&location=origin&w=40&h=40';
+        'https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/${match.awayTeamID}.png&scale=crop&cquality=40&location=origin&w=40&h=40';
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return CreateTeam(
-            homeTeamName: homeTeam,
-            awayTeamName: awayTeam,
-            homeTeamID: homeTeamID,
-            homeImage: homeImage,
-            awayTeamID: awayTeamID,
-            awayImage: awayImage,
-            matchID: matchID,
-          );
-        }));
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => SquadEventBloc(),
+            child: CreateTeam(
+                homeImage: homeImage, awayImage: awayImage, match: match),
+          ),
+        ));
       },
       child: Card(
         elevation: 5,
@@ -59,7 +53,7 @@ class MatchCard extends StatelessWidget {
                     child: Image.network(
                       homeImage,
                       errorBuilder: (context, error, stackTrace) {
-                        return Text('Error');
+                        return Image.network(placeholderImage2);
                       },
                       width: 45,
                       height: 45,
@@ -68,7 +62,7 @@ class MatchCard extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: Text(
-                      homeTeam,
+                      match.homeTeam,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -101,7 +95,7 @@ class MatchCard extends StatelessWidget {
                     child: Image.network(
                       awayImage,
                       errorBuilder: (context, error, stackTrace) {
-                        return Text('Error');
+                        return Image.network(placeholderImage2);
                       },
                       width: 45,
                       height: 45,
@@ -110,7 +104,7 @@ class MatchCard extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: Text(
-                      awayTeam,
+                      match.awayTeam,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,

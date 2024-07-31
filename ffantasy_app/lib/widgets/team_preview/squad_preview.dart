@@ -1,9 +1,10 @@
 import 'dart:math';
 
+import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
 import 'package:ffantasy_app/data/players.dart';
+import 'package:ffantasy_app/private/api/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
 
 List<String> sleeves = [
   "assets/sleeves/black.png",
@@ -18,7 +19,7 @@ class SquadPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<List<int>> squad = [];
+    List<List<Player>> squad = [];
     return BlocBuilder<SquadEventBloc, SquadEventState>(
         builder: (context, state) {
       if (state is SquadAddedState) {
@@ -53,7 +54,7 @@ class SquadPreview extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            for (int player in squad[i])
+                            for (Player player in squad[i])
                               Container(
                                 width: 70,
                                 height: 80,
@@ -73,7 +74,7 @@ class SquadPreview extends StatelessWidget {
                                       height: 15,
                                       color: Colors.white,
                                       child: Text(
-                                        findPlayerdetails(player)['name'],
+                                        "hi",
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         style: const TextStyle(
@@ -91,7 +92,7 @@ class SquadPreview extends StatelessWidget {
                                       color: const Color.fromARGB(
                                           255, 236, 236, 236),
                                       child: Text(
-                                        findPlayerdetails(player)['team'],
+                                        "Hello",
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         style: const TextStyle(

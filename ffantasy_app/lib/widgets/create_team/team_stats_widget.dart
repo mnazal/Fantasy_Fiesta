@@ -1,4 +1,5 @@
-import 'package:ffantasy_app/bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/private/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -85,7 +86,11 @@ class _TeamStatsState extends State<TeamStats> {
                       Image.network(
                         widget.homeImage,
                         errorBuilder: (context, error, stackTrace) {
-                          return Text('Error');
+                          return Image.network(
+                            placeholderImage2,
+                            width: 45,
+                            height: 45,
+                          );
                         },
                         width: 45,
                         height: 45,
@@ -118,7 +123,11 @@ class _TeamStatsState extends State<TeamStats> {
                       Image.network(
                         widget.awayImage,
                         errorBuilder: (context, error, stackTrace) {
-                          return Text('Error');
+                          return Image.network(
+                            placeholderImage2,
+                            width: 45,
+                            height: 45,
+                          );
                         },
                         width: 45,
                         height: 45,

@@ -12,7 +12,7 @@ async function getPlayerDetails(url, age, position) {
 
                // Extract player details for a single player
         const playerDetails = $('tr.odd').first().map((index, element) => {
-            let marketValue=0
+            let marketValue=0;
             const playerImage = $(element).find('img.bilderrahmen-fixed').attr('src');
             const someValue = $(element).find('td.hauptlink').text().trim()||
                 $(element).find('td.rechts').last().text().trim();
@@ -28,7 +28,7 @@ async function getPlayerDetails(url, age, position) {
                }
 
                const newMarketValue=marketValue==0 ?0: calculatePlayerValue(position,parseInt(age),marketValue);
-               console.log(newMarketValue);
+               
            
             
 

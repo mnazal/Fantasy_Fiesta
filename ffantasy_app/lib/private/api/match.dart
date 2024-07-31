@@ -30,4 +30,15 @@ class Match {
       location: json['location'].toString(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'matchId': int.parse(matchID),
+      'homeTeamId': int.parse(homeTeamID),
+      'homeTeam': homeTeam,
+      'awayTeamId': int.parse(awayTeamID),
+      'awayTeam': awayTeam,
+      'time': time,
+    };
+  }
 }

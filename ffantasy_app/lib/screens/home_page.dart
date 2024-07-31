@@ -83,11 +83,6 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: FantasyNavBar(
         selectedIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -137,14 +132,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: displayedMatches.length,
                         itemBuilder: (context, index) {
                           final match = displayedMatches[index];
-                          return MatchCard(
-                            awayTeam: match.awayTeam,
-                            homeTeam: match.homeTeam,
-                            time: match.time,
-                            matchID: match.matchID,
-                            awayTeamID: match.awayTeamID,
-                            homeTeamID: match.homeTeamID,
-                          );
+                          return MatchCard(match: match);
                         },
                       );
                     }

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const PlayerSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
+  playerID:{type:Number, required: true, unique : true},
+  playerName: { type: String, required: true },
+  age: { type: Number, required: false },
   position: { type: String, required: true },
-  team: { type: String, required: true }, 
-  market_value: { type: Number, required: true },
+  teamName: { type: String, required: true }, 
+  marketValue: { type: Number, required: true },
   points: { type: Number, default: 0 }, 
-  image: { type: String },
+  playerImage: { type: String },
 });
 
 module.exports = mongoose.model('Player', PlayerSchema);

@@ -252,12 +252,3 @@ List<String> numberConstraints = [
   'Select 3-5 Midfielders',
   'Select 1-3 Forwards',
 ];
-
-dynamic findPlayerdetails(int playerid) {
-  for (Map<String, dynamic> player in players) {
-    if (int.parse(player['id']) == playerid) {
-      return player;
-    }
-  }
-  return null;
-}
