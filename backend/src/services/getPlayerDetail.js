@@ -27,7 +27,7 @@ async function getPlayerDetails(url, age, position) {
                    }
                }
 
-               const newMarketValue=marketValue==0 ?0: calculatePlayerValue(position,parseInt(age),marketValue);
+               const newMarketValue=Math.ceil(marketValue==0 ?0: calculatePlayerValue(position,parseInt(age),marketValue));
                
            
             

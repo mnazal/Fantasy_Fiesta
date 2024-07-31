@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 List<Map<String, dynamic>> players = [
   {
     'id': '1',
@@ -252,3 +254,5 @@ List<String> numberConstraints = [
   'Select 3-5 Midfielders',
   'Select 1-3 Forwards',
 ];
+
+Color universalColor = const Color.fromARGB(255, 34, 1, 90);

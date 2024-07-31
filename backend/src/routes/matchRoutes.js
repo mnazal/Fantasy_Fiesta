@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   console.log("Incoming MatchList Request");
   try {
-    const tournament = 'fifa.olympics';
+    const tournament = 'club.friendly';
     const matchListUrl = `https://www.espn.in/football/fixtures?league=${tournament}`;
     
     const cachedMatches = cache.get(matchListUrl);

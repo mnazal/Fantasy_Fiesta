@@ -41,4 +41,13 @@ class Match {
       'time': time,
     };
   }
+
+  void printDetails() {
+    print('Match Number: $matchNumber');
+    print('Match ID: $matchID');
+    print('Home Team: $homeTeam (ID: $homeTeamID)');
+    print('Away Team: $awayTeam (ID: $awayTeamID)');
+    print('Time: $time');
+    print('Location: $location');
+  }
 }

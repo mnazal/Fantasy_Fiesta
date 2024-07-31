@@ -1,19 +1,21 @@
 import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
 
-import 'package:ffantasy_app/data/country.dart';
 import 'package:ffantasy_app/private/api/api.dart';
 import 'package:ffantasy_app/screens/create_team_page.dart';
 
 import 'package:ffantasy_app/private/api/match.dart';
+import 'package:ffantasy_app/widgets/team_preview/squad_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MatchCard extends StatelessWidget {
   final Match match;
+  final int type;
 
   const MatchCard({
     Key? key,
     required this.match,
+    required this.type,
   }) : super(key: key);
 
   @override
@@ -25,13 +27,19 @@ class MatchCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => SquadEventBloc(),
-            child: CreateTeam(
-                homeImage: homeImage, awayImage: awayImage, match: match),
-          ),
-        ));
+        if (type == 0) {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => SquadEventBloc(),
+              child: CreateTeam(
+                  homeImage: homeImage, awayImage: awayImage, match: match),
+            ),
+          ));
+        } else if (type == 1) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SquadPreview(
+                  homeImage: homeImage, awayImage: awayImage, match: match)));
+        }
       },
       child: Card(
         elevation: 5,
@@ -75,12 +83,7 @@ class MatchCard extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    'Today',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Time : 8 pm',
+                    match.time,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.w400),
                   ),

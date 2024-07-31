@@ -372,7 +372,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                   ),
                 ),
                 Container(
-                  height: 80,
+                  height: 70,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                   decoration: const BoxDecoration(
@@ -383,79 +383,9 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      FractionallySizedBox(
-                        heightFactor: 0.85,
-                        child: ElevatedButton(
-                          statesController: MaterialStatesController(),
-                          onPressed: () {
-                            int checked = squadChecks(
-                                playernumber,
-                                numberOfGoalKeepers,
-                                numberofDefenders,
-                                numberOfMidfielders,
-                                numberofForwards);
-                            if (checked == 0) {
-                              _bottomSheetAnimationController
-                                  .forward()
-                                  .then((value) {
-                                showBottomSheet(
-                                  elevation: 10,
-                                  enableDrag: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return FadeTransition(
-                                      opacity: _bottomSheetAnimation,
-                                      child: SlideTransition(
-                                        position: Tween<Offset>(
-                                          begin: const Offset(0, 1),
-                                          end: Offset.zero,
-                                        ).animate(
-                                            _bottomSheetAnimationController),
-                                        child: const SizedBox(
-                                          //child: SquadPreview(),
-                                          height: 600,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).closed.whenComplete(() {
-                                  _bottomSheetAnimationController.reverse();
-                                });
-                              });
-                            } else if (checked == -1) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('You have to select 11 players'),
-                                duration: Duration(seconds: 2),
-                              ));
-                            } else {
-                              showMessage(checked, context);
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 255, 255, 255)),
-                            shape: MaterialStateProperty.all(
-                                const RoundedRectangleBorder(
-                              side: BorderSide(width: 0.1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(2)),
-                            )),
-                            surfaceTintColor:
-                                MaterialStateProperty.all(Colors.white),
-                          ),
-                          child: const Text(
-                            'Preview Team',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
                       const SizedBox(width: 12),
                       FractionallySizedBox(
-                        heightFactor: 0.85,
+                        heightFactor: 1,
                         child: ElevatedButton(
                           onPressed: () {
                             if (state is SquadAddedState) {

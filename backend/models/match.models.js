@@ -13,6 +13,6 @@ const MatchSchema = new mongoose.Schema({
     away_score: { type: Number, default: 0 },
     status: { type: String, default: 'upcoming' } 
   }
-});
+},{timestamps:true});
 
 module.exports = mongoose.model('Match', MatchSchema);

@@ -1,12 +1,5 @@
 import 'dart:math';
-import 'dart:math';
 import 'package:ffantasy_app/constants/quotes.dart';
-import 'package:ffantasy_app/data/matchlist.dart';
-import 'package:ffantasy_app/widgets/utils/match_card.dart';
-import 'package:ffantasy_app/widgets/navbar.dart';
-import 'package:ffantasy_app/widgets/home/news_card.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter/material.dart';
 
 class HomeQuote extends StatelessWidget {

@@ -36,10 +36,12 @@ class _PlayerCardState extends State<PlayerCard> {
     super.initState();
     playerDetails = sendPostRequest();
     playerDetails.then((data) {
-      setState(() {
-        playerData = data;
-        isDataLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          playerData = data;
+          isDataLoaded = true;
+        });
+      }
     });
   }
 

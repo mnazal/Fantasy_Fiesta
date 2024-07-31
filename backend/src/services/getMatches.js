@@ -46,16 +46,21 @@ async function getMatchesList(url) {
                 homeTeamId = parts.length > 2 ? parts[parts.length - 2] : null;
             }
             const homeTeam = $(element).find('.Table__Team').eq(1).find('a').eq(1).text().trim();
-
-
+            
+           
          
             const time = $(element).find('.date__col a').text().trim();
             const venue = $(element).find('.venue__col').text().trim();
+            const ftText = $(element).find('td.teams__col.Table__TD a.AnchorLink').text().trim();
+            
+            if(time=='LIVE' || ftText.includes('FT')){
+                return {};
+            }
 
             return { match_number, matchId, awayTeamId, awayTeam, homeTeamId, homeTeam, time, venue };
         }).get();
 
-        const selectedMatches=matches.slice(0,6);
+        const selectedMatches=matches.filter(match=> match.match_number!=null).slice(0,6);
 
         return selectedMatches
     } catch (error) {

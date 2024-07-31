@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
   totalPoints:{
     type: Number,
     default:0,
+  },
+  totalTeams:{
+    type:Number,default:0
   }
 });
 

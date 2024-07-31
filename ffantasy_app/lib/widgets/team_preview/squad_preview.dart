@@ -1,207 +1,281 @@
+import 'dart:convert';
 import 'dart:math';
-
-import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
-import 'package:ffantasy_app/data/players.dart';
-import 'package:ffantasy_app/private/api/player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:ffantasy_app/private/api/api.dart';
+import 'package:ffantasy_app/private/api/player.dart';
+import 'package:ffantasy_app/private/api/match.dart';
 
-List<String> sleeves = [
-  "assets/sleeves/black.png",
-  "assets/sleeves/arg.png",
-];
-
-// ignore: must_be_immutable
-class SquadPreview extends StatelessWidget {
+class SquadPreview extends StatefulWidget {
+  final String homeImage, awayImage;
+  final Match match;
   const SquadPreview({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    required this.match,
+    required this.homeImage,
+    required this.awayImage,
+  });
+
+  @override
+  State<SquadPreview> createState() => _SquadPreviewState();
+}
+
+class _SquadPreviewState extends State<SquadPreview> {
+  String userName = 'nazal';
+  int homeScore = 0;
+  int awayScore = 0;
+  String status = "NS";
+  List<String> sleeves = [
+    "assets/sleeves/black.png",
+    "assets/sleeves/arg.png",
+  ];
+
+  Future<List<Players>> fetchFantasyUserSquad() async {
+    final url = Uri.parse(fantasySquadUri);
+    final headers = {"Content-Type": "application/json"};
+    final body = jsonEncode({
+      "userName": userName,
+      "matchID": int.parse(widget.match.matchID),
+    });
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData1 = json.decode(response.body);
+
+        return jsonData1
+            .map((json) => Players.fromJson(json, json['teamName'].toString()))
+            .toList();
+      } else {
+        //print('Failed to fetch data. Status Code: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      //print('Error occurred: $e');
+      return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<List<Player>> squad = [];
-    return BlocBuilder<SquadEventBloc, SquadEventState>(
-        builder: (context, state) {
-      if (state is SquadAddedState) {
-        squad = state.squad;
-      }
-      return GestureDetector(
-        onVerticalDragEnd: (_) {
-          Navigator.pop(context); // End drag, close the bottom sheet
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 34, 1, 90),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          child: Column(
-            children: [
-              Container(
-                height: 500,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                  image: DecorationImage(
-                    image: AssetImage('assets/avatars/field.png'),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (int i = 0; i < 4; i++)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            for (Player player in squad[i])
-                              Container(
-                                width: 70,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          sleeves[Random().nextInt(2)])),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      margin: EdgeInsets.all(0),
-                                      width: 80,
-                                      height: 15,
-                                      color: Colors.white,
-                                      child: Text(
-                                        "hi",
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            overflow: TextOverflow.ellipsis),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 5),
-                                      margin: EdgeInsets.all(0),
-                                      width: 80,
-                                      height: 14,
-                                      color: const Color.fromARGB(
-                                          255, 236, 236, 236),
-                                      child: Text(
-                                        "Hello",
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        style: const TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                            overflow: TextOverflow.ellipsis),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                height: 80,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(155, 225, 225, 225),
-                ),
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+        title: const Text(
+          'My Team',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              height: 180,
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(255, 34, 1, 90)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    FractionallySizedBox(
-                      heightFactor: 0.85,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 255, 0, 0)),
-                          shape: MaterialStateProperty.all(
-                              const RoundedRectangleBorder(
-                            side: BorderSide(width: 0.1),
-                            borderRadius: BorderRadius.all(Radius.circular(2)),
-                          )),
-                          surfaceTintColor:
-                              MaterialStateProperty.all(Colors.white),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(children: [
+                          Image.network(
+                            widget.homeImage,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                placeholderImage2,
+                                width: 45,
+                                height: 45,
+                              );
+                            },
+                            width: 45,
+                            height: 45,
+                          ),
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              widget.match.homeTeam,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 12),
+                            ),
+                          ),
+                        ]),
+                        Text(
+                          homeScore.toString(),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w600),
                         ),
-                        child: const Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Back',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                          ],
+                        Text(
+                          status,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w600),
                         ),
-                      ),
+                        Text(
+                          awayScore.toString(),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                        Column(children: [
+                          Image.network(
+                            widget.awayImage,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                placeholderImage2,
+                                width: 45,
+                                height: 45,
+                              );
+                            },
+                            width: 45,
+                            height: 45,
+                          ),
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              widget.match.awayTeam,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 12),
+                            ),
+                          ),
+                        ]),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    FractionallySizedBox(
-                      heightFactor: 0.85,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color.fromARGB(255, 34, 1, 90)),
-                          shape: MaterialStateProperty.all(
-                              const RoundedRectangleBorder(
-                            side: BorderSide(width: 0.1),
-                            borderRadius: BorderRadius.all(Radius.circular(2)),
-                          )),
-                          surfaceTintColor:
-                              MaterialStateProperty.all(Colors.white),
-                        ),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Confirm Team',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            const Icon(Icons.save, color: Colors.white),
-                          ],
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Container(
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/avatars/field.png'),
+                      fit: BoxFit.fitHeight),
+                ),
+                child: FutureBuilder<List<Players>>(
+                  future: fetchFantasyUserSquad(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No players found.'));
+                    } else {
+                      List<List<Players>> fantasySquad =
+                          positionizeSquad(snapshot.data!);
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          for (int i = 0; i < squadPositions.length; i++)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                for (int j = 0; j < fantasySquad[i].length; j++)
+                                  Container(
+                                    width: 70,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          alignment: Alignment.topCenter,
+                                          image: AssetImage(
+                                            fantasySquad[i][j].teamName ==
+                                                    widget.match.homeTeam
+                                                ? sleeves[0]
+                                                : sleeves[1],
+                                          )),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          margin: EdgeInsets.all(0),
+                                          width: 80,
+                                          color: Colors.white,
+                                          child: Text(
+                                            fantasySquad[i][j].playerName,
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                height: 1.1,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          margin: EdgeInsets.all(0),
+                                          width: 80,
+                                          height: 14,
+                                          color: const Color.fromARGB(
+                                              255, 236, 236, 236),
+                                          child: Text(
+                                            "0",
+                                            textAlign: TextAlign.center,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            )
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ),
+            )
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }
+
+List<List<Players>> positionizeSquad(List<Players> players) {
+  List<List<Players>> positionizedSquad =
+      List.generate(squadPositions.length, (_) => []);
+  for (Players player in players) {
+    positionizedSquad[squadPositions.indexOf(player.position)].add(player);
+  }
+  return positionizedSquad;
+}
+
+List<String> squadPositions = ['G', 'D', 'M', 'F'];
