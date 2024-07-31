@@ -5,7 +5,7 @@ const MatchSchema = new mongoose.Schema({
   homeTeamId: { type: Number, required: true },
   homeTeam: { type: String, required: true },
   awayTeamId: { type: Number, required: true },
-  awayTteam: { type: String, required: true },
+  awayTeam: { type: String, required: true },
   time: { type: String, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   result: {

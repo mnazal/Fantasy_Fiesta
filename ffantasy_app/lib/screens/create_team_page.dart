@@ -176,7 +176,6 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
               );
             }
           } else if (state is MatchAndSquadSubmissionSuccessState) {
-            Navigator.pop(context);
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -197,15 +196,14 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
               },
             );
           } else if (state is MatchAndSquadSubmissionFailureState) {
-            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Failed to submit the team. Please try again.'),
                 duration: Duration(seconds: 2),
               ),
             );
+            Navigator.of(context).pop();
           } else if (state is SquadLoadingState) {
-            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Submitting your Squad ......'),
@@ -220,6 +218,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                 duration: Duration(seconds: 2),
               ),
             );
+            Navigator.of(context).pop();
           }
         },
         builder: (context, state) {

@@ -92,9 +92,11 @@ class _PlayerCardState extends State<PlayerCard> {
         }
         return GestureDetector(
           onTap: () {
-            context
-                .read<SquadEventBloc>()
-                .add(AddPlayerEvent(context, widget.home, widget.player));
+            if (isDataLoaded) {
+              context
+                  .read<SquadEventBloc>()
+                  .add(AddPlayerEvent(context, widget.home, widget.player));
+            }
           },
           child: Container(
             decoration: BoxDecoration(
