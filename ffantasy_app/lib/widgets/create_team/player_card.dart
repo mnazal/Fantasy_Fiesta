@@ -97,7 +97,7 @@ class _PlayerCardState extends State<PlayerCard> {
                 context,
                 widget.home,
                 widget.position,
-                double.parse(playerValue.replaceAll('N/A', '0'))));
+                double.parse(playerValue.toString().replaceAll('N/A', '0'))));
           },
           child: Container(
             decoration: BoxDecoration(

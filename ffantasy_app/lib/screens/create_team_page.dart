@@ -316,8 +316,6 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                             final player =
                                                 positionFilteredSquad[index];
 
-                                            print(player);
-
                                             return PlayerCard(
                                               playerid:
                                                   int.parse(player.playerID),

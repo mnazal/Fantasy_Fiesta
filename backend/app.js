@@ -4,9 +4,21 @@ const { getSquadList } = require('./src/getSquad');
 const { getPlayerDetails } = require('./src/getPlayerDetail');
 const { calculatePlayerValue } = require('./src/playerValueAgorithm');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const User = require('./models/user.models');
 
 const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 700000 }); //
+const cache = new NodeCache({ stdTTL: 700000 });
+
+const dbName = 'fantasyfiesta';
+const dbUri = `mongodb+srv://mnazal:wantsandneeds@cluster0.3jkakfx.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
+
+
+mongoose.connect(dbUri)
+  .then(() => console.log('MongoDB connected...'))
+  .catch(err => console.log(err));
+
+
 
 
 const app = express();
