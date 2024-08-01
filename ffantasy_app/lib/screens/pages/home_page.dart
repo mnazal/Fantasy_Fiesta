@@ -120,7 +120,7 @@ class _HomePageIteamsState extends State<HomePageIteams> {
                   NewsCard(
                       newsHeading:
                           'Real Madrid wins the Champions League for the 15th time',
-                      image: 'assets/madrid.jpg'),
+                      image: 'assets/avatars/zz.png'),
                 ],
               ),
             ],
