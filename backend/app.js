@@ -9,7 +9,8 @@ const playerRoutes = require('./src/routes/playerRoutes');
 const squadSubmissionRoutes = require('./src/routes/squadSubmission');
 const userMatches = require('./src/routes/userMatches');
 const fantasySquad = require('./src/routes/fantasySquad');
-//const matchResult = require('./src/routes/matchResult');
+const matchResult = require('./src/routes/matchResult');
+const userDetails = require('./src/routes/userDetails');
 const { dbUri } = require('./src/db');
 
 
@@ -34,7 +35,8 @@ app.use('/player_details', playerRoutes);
 app.use('/submitSquad', squadSubmissionRoutes);
 app.use('/userMatches', userMatches);
 app.use('/fantasySquad', fantasySquad);
-//app.use('/matchResult', matchResult);
+app.use('/matchResult', matchResult);
+app.use('/user_details', userDetails);
 
 app.listen(PORT, () => {
   console.log(`Server running successfully at http://localhost:${PORT}`);

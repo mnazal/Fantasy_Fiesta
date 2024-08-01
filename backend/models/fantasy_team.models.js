@@ -7,6 +7,7 @@ const FantasyTeamSchema = new mongoose.Schema({
   players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }], 
   created_at: { type: Date, default: Date.now },
   total_points: { type: Number, default: 0 }, 
+  points_updated:{type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('FantasyTeam', FantasyTeamSchema);

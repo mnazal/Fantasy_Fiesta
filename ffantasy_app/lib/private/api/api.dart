@@ -6,3 +6,5 @@ const placeholderImage2 = 'http://10.0.2.2:8000/static/football.png';
 const submitSquadUri = 'http://10.0.2.2:8000/submitSquad/';
 const usermatchUri = 'http://10.0.2.2:8000/userMatches/';
 const fantasySquadUri = 'http://10.0.2.2:8000/fantasySquad/';
+const matchResultUri = 'http://10.0.2.2:8000/matchResult/';
+const userDetailsUri = 'http://10.0.2.2:8000/user_details/';
