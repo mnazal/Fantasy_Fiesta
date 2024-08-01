@@ -198,7 +198,7 @@ class _MyTeamState extends State<MyTeam> {
                   child: const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "\tUpcoming Matches",
+                      "\t My Teams",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),

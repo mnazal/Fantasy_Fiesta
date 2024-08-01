@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class NewsCard extends StatelessWidget {
+  final String newsHeading;
+  final String image;
   const NewsCard({
     Key? key,
+    required this.newsHeading,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -22,7 +26,7 @@ class NewsCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.asset(
-                'assets/avatars/ARG.jpg',
+                image,
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
@@ -33,8 +37,8 @@ class NewsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Argentina Wins the 2022 World Cup, Defeating France',
+                  Text(
+                    newsHeading,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

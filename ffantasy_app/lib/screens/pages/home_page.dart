@@ -111,10 +111,16 @@ class _HomePageIteamsState extends State<HomePageIteams> {
               ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  const NewsCard(),
-                  const NewsCard(),
-                  const NewsCard(),
+                children: const [
+                  NewsCard(
+                    newsHeading:
+                        'Argentina Wins the 2022 World Cup, Defeating France',
+                    image: 'assets/avatars/ARG.jpg',
+                  ),
+                  NewsCard(
+                      newsHeading:
+                          'Real Madrid wins the Champions League for the 15th time',
+                      image: 'assets/madrid.jpg'),
                 ],
               ),
             ],
