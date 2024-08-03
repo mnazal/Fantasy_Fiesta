@@ -16,7 +16,7 @@ class NewsCard extends StatelessWidget {
       surfaceTintColor: Colors.white,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
-          side: BorderSide(width: 0.6, color: Colors.deepPurple)),
+          side: const BorderSide(width: 0.6, color: Colors.deepPurple)),
       elevation: 0,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Padding(
@@ -39,7 +39,7 @@ class NewsCard extends StatelessWidget {
                 children: [
                   Text(
                     newsHeading,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

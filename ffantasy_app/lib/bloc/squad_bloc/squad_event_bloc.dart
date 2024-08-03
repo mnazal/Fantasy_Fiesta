@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ffantasy_app/data/constants.dart';
 import 'package:ffantasy_app/data/players.dart';
 import 'package:ffantasy_app/private/api/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,7 +82,7 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
             }
 
             if (flag == 1) {
-              if (squadCost + event.player.marketValue <= 150) {
+              if (squadCost + event.player.marketValue <= costLimit) {
                 if (event.ishome) {
                   if (homePlayers < 7) {
                     homePlayers++;
@@ -161,7 +162,7 @@ class SquadEventBloc extends Bloc<SquadEventEvent, SquadEventState> {
       }
     });
 
-    // Initialize with an empty list of lists
+    // ignore: invalid_use_of_visible_for_testing_member
     emit(SquadAddedState(
       squad: List.generate(4, (_) => []),
       cost: 0,
@@ -179,9 +180,9 @@ void showMessage(
       duration: const Duration(seconds: 2),
     ));
   } else {
-    ScaffoldMessenger.of(messengercontext).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(messengercontext).showSnackBar(const SnackBar(
       content: Text('Select only 7 players from a team'),
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: 2),
     ));
   }
 }

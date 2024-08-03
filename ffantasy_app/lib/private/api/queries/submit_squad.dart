@@ -36,12 +36,14 @@ Future<void> submitSquad(BuildContext context, List<List<Player>> squad,
   );
 
   if (response.statusCode == 200) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Squad submitted successfully!'),
       duration: Duration(seconds: 2),
     ));
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Failed to submit squad.'),
       duration: Duration(seconds: 2),
     ));

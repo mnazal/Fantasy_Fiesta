@@ -1,1 +1,1 @@
-final apiToken = 'gNTlGJHSIA3XEWwRZaxWfBljQGpfLcqPr2Q3fOFxemeKuiZLZfbpHZ3ewfXm';
+const apiToken = 'gNTlGJHSIA3XEWwRZaxWfBljQGpfLcqPr2Q3fOFxemeKuiZLZfbpHZ3ewfXm';

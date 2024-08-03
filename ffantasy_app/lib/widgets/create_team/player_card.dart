@@ -18,6 +18,7 @@ class PlayerCard extends StatefulWidget {
   Player player;
 
   PlayerCard({
+    super.key,
     required this.home,
     required this.player,
   });
@@ -60,11 +61,11 @@ class _PlayerCardState extends State<PlayerCard> {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print('Failed to send data. Status code: ${response.statusCode}');
+        //print('Failed to send data. Status code: ${response.statusCode}');
         return {};
       }
     } catch (e) {
-      print('Error occurred: $e');
+      //print('Error occurred: $e');
       return {};
     }
   }
@@ -124,7 +125,7 @@ class _PlayerCardState extends State<PlayerCard> {
                     children: [
                       AnimatedOpacity(
                         opacity: isDataLoaded ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         child: Container(
                           width: 46,
                           height: 46,
@@ -149,7 +150,9 @@ class _PlayerCardState extends State<PlayerCard> {
                           children: [
                             const SizedBox(height: 10),
                             Text(
-                              widget.player.playerName,
+                              widget.player.playerName.length > 13
+                                  ? "${widget.player.playerName.substring(0, 13)}.."
+                                  : widget.player.playerName,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: const TextStyle(

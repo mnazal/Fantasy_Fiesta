@@ -1,4 +1,5 @@
 import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/data/constants.dart';
 import 'package:ffantasy_app/private/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,14 +26,15 @@ class _TeamStatsState extends State<TeamStats> {
 
   double creditsLeft = 0;
 
-  int _totalPlayers = 11;
+  final _totalPlayers = 11;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SquadEventBloc, SquadEventState>(
       listener: (context, state) {
         if (state is SquadAddedState) {
-          creditsLeft = double.parse((150 - state.cost).toStringAsFixed(1));
+          creditsLeft =
+              double.parse((costLimit - state.cost).toStringAsFixed(1));
 
           homeNumber = state.home;
           awayNumber = state.away;

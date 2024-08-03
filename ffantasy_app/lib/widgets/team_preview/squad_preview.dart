@@ -65,15 +65,15 @@ class _SquadPreviewState extends State<SquadPreview> {
           };
           return returnData;
         } else {
-          print('Error: Empty response body.');
+          //print('Error: Empty response body.');
           return {};
         }
       } else {
-        print('Failed to fetch data. Status Code: ${response.statusCode}');
+        // print('Failed to fetch data. Status Code: ${response.statusCode}');
         return {};
       }
     } catch (e) {
-      print('Error occurred: $e');
+      //print('Error occurred: $e');
       return {};
     }
   }
@@ -104,25 +104,39 @@ class _SquadPreviewState extends State<SquadPreview> {
         future: fetchFantasyUserSquad(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No players found.'));
+            return const Center(child: Text('No players found.'));
           } else {
             final fetchedData = snapshot.data!;
             List<List<Players>> fantasySquad =
                 positionizeSquad(snapshot.data!['players']);
 
             final int fantasyPoints = fetchedData['totalPoints'];
-            final int homeScore =
-                fetchedData['scores'][widget.match.homeTeamID.toString] ?? 0;
-            final int awayScore =
-                fetchedData['scores'][widget.match.awayTeamID.toString] ?? 0;
-            final String status = fetchedData['status'];
+            final Map<String, dynamic> scores = fetchedData['scores'];
+            String homeTeamID = widget.match.homeTeamID;
+            String awayTeamID = widget.match.awayTeamID;
 
-            final List<Map<String, dynamic>> goalscored =
-                fetchedData['goalScorers'];
+            String homeScore = scores[homeTeamID].toString();
+            String awayScore = scores[awayTeamID].toString();
+
+            List<Map<String, dynamic>> goalsScored = fetchedData['goalScorers'];
+
+            final List<Map<String, dynamic>> homeScorers = goalsScored
+                .where((element) => element['teamId'] == homeTeamID)
+                .toList();
+
+            final List<Map<String, dynamic>> awayScorers = goalsScored
+                .where((element) => element['teamId'] == awayTeamID)
+                .toList();
+
+            final String status = fetchedData['status'];
+            if (status == 'NS') {
+              homeScore = '0';
+              awayScore = '0';
+            }
 
             return SafeArea(
               child: Column(
@@ -166,7 +180,7 @@ class _SquadPreviewState extends State<SquadPreview> {
                                 ),
                               ]),
                               Text(
-                                homeScore.toString(),
+                                homeScore,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
@@ -178,7 +192,7 @@ class _SquadPreviewState extends State<SquadPreview> {
                                     fontWeight: FontWeight.w600),
                               ),
                               Text(
-                                awayScore.toString(),
+                                awayScore,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
@@ -212,43 +226,114 @@ class _SquadPreviewState extends State<SquadPreview> {
                               ]),
                             ],
                           ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 0,
-                            ),
-                            height: 80,
-                            width: 85,
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  fantasyPoints.toString(),
-                                  style: TextStyle(
-                                      fontSize: 35,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 45, 2, 119)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              homeScorers.isNotEmpty
+                                  ? Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 60,
+                                              child: ListView.builder(
+                                                itemCount: homeScorers.length,
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                    homeScorers[index]['time'] +
+                                                        homeScorers[index]
+                                                            ['playerName'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const Spacer(),
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                height: 80,
+                                width: 85,
+                                decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.all(0),
-                                  width: double.infinity,
-                                  color: universalColor,
-                                  child: Text(
-                                    'Total Points',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            Color.fromARGB(255, 241, 241, 241)),
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      fantasyPoints.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 35,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 45, 2, 119),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.all(0),
+                                      width: double.infinity,
+                                      color: universalColor,
+                                      child: const Text(
+                                        'Total Points',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color.fromARGB(
+                                              255, 241, 241, 241),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                              awayScorers.isNotEmpty
+                                  ? Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 60,
+                                              child: ListView.builder(
+                                                itemCount: awayScorers.length,
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                    awayScorers[index]['time'] +
+                                                        awayScorers[index]
+                                                            ['playerName'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const Spacer(),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -256,7 +341,7 @@ class _SquadPreviewState extends State<SquadPreview> {
                   Expanded(
                     child: Container(
                       width: double.maxFinite,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage('assets/avatars/field.png'),
                             fit: BoxFit.fitHeight),
@@ -286,9 +371,9 @@ class _SquadPreviewState extends State<SquadPreview> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 2),
-                                          margin: EdgeInsets.all(0),
+                                          margin: const EdgeInsets.all(0),
                                           width: 80,
                                           color: Colors.white,
                                           child: Text(
@@ -305,9 +390,9 @@ class _SquadPreviewState extends State<SquadPreview> {
                                           ),
                                         ),
                                         Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
-                                          margin: EdgeInsets.all(0),
+                                          margin: const EdgeInsets.all(0),
                                           width: 80,
                                           height: 14,
                                           color: const Color.fromARGB(

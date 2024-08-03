@@ -7,11 +7,9 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
     List<String> bg = ['assets/intial/bg1.jpg', 'assets/intial/bg2.jpg'];
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 34, 1, 90),
+      backgroundColor: const Color.fromARGB(255, 34, 1, 90),
       body: Container(
         width: double.infinity,
         height: double.infinity,

@@ -50,7 +50,7 @@ class HomeQuote extends StatelessWidget {
                           softWrap: true,
                         ),
                         Text(
-                          '- ' + footballer["name"]!,
+                          '- ${footballer["name"]!}',
                           textAlign: TextAlign.end,
                           style: const TextStyle(
                             fontSize: 13,

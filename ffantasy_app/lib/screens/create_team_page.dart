@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:ffantasy_app/bloc/squad_bloc/squad_event_bloc.dart';
+import 'package:ffantasy_app/data/constants.dart';
 
 import 'package:ffantasy_app/private/api/api.dart';
 import 'package:ffantasy_app/private/api/match.dart';
 import 'package:ffantasy_app/private/api/player.dart';
-import 'package:ffantasy_app/widgets/team_preview/squad_preview.dart';
 import 'package:ffantasy_app/widgets/create_team/player_card.dart';
 import 'package:ffantasy_app/widgets/create_team/team_stats_widget.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +29,7 @@ class CreateTeam extends StatefulWidget {
 
 class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
   TabController? _tabController;
-  late AnimationController _bottomSheetAnimationController;
-  late Animation<double> _bottomSheetAnimation;
+
   late Future<List<Player>> _squadfuture;
 
   @override
@@ -41,19 +38,11 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
     _squadfuture = fetchSquad(
         int.parse(widget.match.homeTeamID), int.parse(widget.match.awayTeamID));
     _tabController = TabController(length: 4, vsync: this);
-
-    _bottomSheetAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _bottomSheetAnimation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(_bottomSheetAnimationController);
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
-    _bottomSheetAnimationController.dispose();
     super.dispose();
   }
 
@@ -156,7 +145,7 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
       body: BlocConsumer<SquadEventBloc, SquadEventState>(
         listener: (context, state) {
           if (state is SquadAddedState) {
-            creditsLeft = 150 - state.cost;
+            creditsLeft = costLimit - state.cost;
 
             homeNumber = state.home;
             awayNumber = state.away;
@@ -405,10 +394,10 @@ class _CreateTeamState extends State<CreateTeam> with TickerProviderStateMixin {
                                         match, state.squad));
                               } else {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                    .showSnackBar(const SnackBar(
                                   content:
                                       Text('You have to Select 11 Players'),
-                                  duration: const Duration(seconds: 2),
+                                  duration: Duration(seconds: 2),
                                 ));
                               }
                             }

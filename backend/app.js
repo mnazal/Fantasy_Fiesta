@@ -11,7 +11,8 @@ const userMatches = require('./src/routes/userMatches');
 const fantasySquad = require('./src/routes/fantasySquad');
 const matchResult = require('./src/routes/matchResult');
 const userDetails = require('./src/routes/userDetails');
-const { dbUri } = require('./src/db');
+require('dotenv').config();
+
 
 
 
@@ -20,7 +21,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(cors());
 
-mongoose.connect(dbUri)
+const mongoUri = process.env.MONGODB_URI;
+mongoose.connect(mongoUri)
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err));
 

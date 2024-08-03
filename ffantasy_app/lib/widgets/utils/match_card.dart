@@ -44,7 +44,7 @@ class MatchCard extends StatelessWidget {
       child: Card(
         elevation: 5,
         borderOnForeground: true,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             side: BorderSide(width: 0.4, color: Colors.deepPurple),
             borderRadius: BorderRadius.all(Radius.circular(4))),
         surfaceTintColor: Colors.white,
@@ -79,17 +79,17 @@ class MatchCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Column(
                 children: [
                   Text(
                     match.time,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w400),
+                    style: const TextStyle(fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Column(
                 children: [
                   SizedBox(

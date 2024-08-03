@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
     if (!fantasyTeam || !fantasyTeam.players || fantasyTeam.players.length === 0) {
       return res.status(404).send('No fantasy team found for the match');
     }
-    const matchUrl = `https://www.espn.in/football/lineups/_/gameId/700489`;
+    const matchUrl = `https://www.espn.in/football/lineups/_/gameId/${matchID}`;
     const matchResultObtained = await fetchMatchResult(matchUrl);
     let totalPoints;
     let status = "NS";

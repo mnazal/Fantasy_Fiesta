@@ -1,7 +1,6 @@
 import 'package:ffantasy_app/bloc/bottomnavbar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:ffantasy_app/screens/pages/home_page.dart';
 import 'package:ffantasy_app/screens/pages/my_team_page.dart';
-import 'package:ffantasy_app/widgets/team_preview/squad_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -98,7 +97,7 @@ class _HomePageState extends State<HomePage> {
           ),
           body: IndexedStack(
             index: _currentIndex,
-            children: [
+            children: const [
               HomePageIteams(),
               MyTeam(),
             ],

@@ -36,7 +36,7 @@ class _MyTeamState extends State<MyTeam> {
                 final match = Match.fromJson(json);
                 return match;
               } catch (e) {
-                print('Error parsing Match JSON: $e');
+                //print('Error parsing Match JSON: $e');
                 return null;
               }
             })
@@ -53,7 +53,7 @@ class _MyTeamState extends State<MyTeam> {
         throw Exception('Failed to load matches');
       }
     } catch (e) {
-      print('Error fetching matches: $e');
+      //print('Error fetching matches: $e');
       return {};
     }
   }
@@ -152,7 +152,7 @@ class _MyTeamState extends State<MyTeam> {
                             ),
                             Text(
                               userData['pointsObtained'].toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                   color: Color.fromARGB(255, 45, 2, 119)),
@@ -181,7 +181,7 @@ class _MyTeamState extends State<MyTeam> {
                             ),
                             Text(
                               userData['matchesPlayed'].toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                   color: Color.fromARGB(255, 45, 2, 119)),
@@ -192,10 +192,9 @@ class _MyTeamState extends State<MyTeam> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20.0, left: 20, bottom: 10),
-                  child: const Align(
+                const Padding(
+                  padding: EdgeInsets.only(top: 20.0, left: 20, bottom: 10),
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "\t My Teams",
