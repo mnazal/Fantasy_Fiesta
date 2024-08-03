@@ -1,4 +1,4 @@
-# Fantasy Football Fiesta Application
+# Fantasy Fiesta - A Fantasy football application
 
 The Fantasy Football Fiesta Application is a mobile app designed to offer a user-friendly platform for managing fantasy football teams. It utilizes modern technologies to provide a seamless experience from both the user interface and backend perspectives.
 
