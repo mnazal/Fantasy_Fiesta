@@ -12,14 +12,16 @@ It was a project intended to launch to conduct fantasy football competition in m
 
 **Client:** Flutter, Bloc State management
 
-**Server:** Node.js, MongoDB
+**Server:** Node.js, Express.js, MongoDB
 
 
 ## Features
 
-Player Selection: Users can select players to form their fantasy football teams.
-Team Management: Users can manage their teams, including making transfers and setting up formations.
-Real-Time Updates: The app provides real-time updates on match scores and player performances.
+**-> ** Player Selection: Users can select players to form their fantasy football teams.
+**-> ** Match Listing: Display a list of upcoming and past matches with detailed information.
+**-> ** Live Match Data: Integration with an external API to fetch live match data and updates.
+**-> ** Dynamic Points Update: Automatically update player points in the database and reflect the changes in the user's fantasy team.
+**-> ** Performance Optimization: Use caching to store frequently accessed data, reducing the load on the database and improving response times.
 
 
 ## Demo
